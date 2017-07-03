@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        applicationId "com.example.dongao.mydemoapp"
+        minSdkVersion 21
+        targetSdkVersion 23
+        versionCode 3
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {}
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+//    applicationVariants.all{ variant ->
+//        variant.outputs.each {output ->
+//            output.outputFile=new File(output.outputFile.parentFile, buildType.name+defaultConfig.versionCode)
+//        }
+//    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //    compile(name:'aar Name',ext:'aar')
+
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:design:23.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.7'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.17'
+    testCompile 'junit:junit:4.12'
+}
+
+ext {
+    local = 'hello from build.gradle'
+}
+task printProperty << {
+    println local
+    println printProperty
+    if (project.hasProperty('cmd')) {
+        println cmd
+    }
+
+}

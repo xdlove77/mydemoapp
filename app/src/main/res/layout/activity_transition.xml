@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_transition"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:onClick="onClick"
+    tools:context="com.example.dongao.mydemoapp.TransitionActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        />
+
+
+    <RelativeLayout
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:padding="20dp"
+        >
+        <ImageView
+            android:id="@+id/demo2_iv1"
+            android:layout_width="45dp"
+            android:layout_height="68dp"
+            android:src="@mipmap/aa"
+            android:onClick="onClick"
+            />
+        <ImageView
+            android:id="@+id/demo2_iv2"
+            android:layout_width="45dp"
+            android:layout_height="68dp"
+            android:src="@mipmap/aa"
+            android:layout_alignParentRight="true"
+            android:onClick="onClick"
+
+            />
+        <ImageView
+            android:id="@+id/demo2_iv3"
+            android:layout_width="45dp"
+            android:layout_height="68dp"
+            android:src="@mipmap/aa"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="onClick"
+
+            />
+        <ImageView
+            android:id="@+id/demo2_iv4"
+            android:layout_width="45dp"
+            android:layout_height="68dp"
+            android:src="@mipmap/aa"
+            android:layout_alignParentBottom="true"
+            android:onClick="onClick"
+
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/shared_element_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/colorAccent"
+        android:text="@string/action_settings"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

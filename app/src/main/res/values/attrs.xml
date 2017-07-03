@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="LoopView">
+        <attr name="lineColor" format="color"/>
+        <attr name="topBottomTextColor" format="color"/>
+        <attr name="centerTextColor" format="color"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="canLoop" format="boolean"/>
+        <attr name="initPosition" format="integer"/>
+        <attr name="drawItemCount" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="SideBar">
+        <attr name="bgColor" format="color"/>
+        <attr name="txColor" format="color"/>
+        <attr name="txSize" format="dimension"/>
+        <attr name="textChooesColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomClipTabView">
+        <attr name="bgSrc" format="reference"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="VerificationEditText">
+        <attr name="codeTextSize" format="dimension"/>
+        <attr name="codeTextColor" format="color"/>
+        <attr name="codeLength" format="integer"/>
+    </declare-styleable>
+    
+    <declare-styleable name="QulineView">
+        <attr name="lineWidth" format="dimension"/>
+        <attr name="scale_text_size" format="dimension"/>
+    </declare-styleable>
+</resources>
