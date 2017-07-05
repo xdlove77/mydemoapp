@@ -37,13 +37,35 @@ public class MySelfBingImageDemoActivity extends Activity {
         setContentView(R.layout.activity_my_self_bing_image_demo);
         bingImage = (BingImage) findViewById(R.id.bingImage);
         List<BingImage.BingBean> data=new ArrayList<>();
-        data.add(new BingImage.BingBean(Color.BLACK,0.4f,"哈哈","嘿嘿嘿"));
-        data.add(new BingImage.BingBean(Color.LTGRAY,0.15f,"哈哈","嘿嘿嘿"));
-        data.add(new BingImage.BingBean(Color.GREEN,0.1f,"审计","gg"));
-        data.add(new BingImage.BingBean(Color.BLUE,0.05f,"哈哈","嘿嘿嘿"));
-        data.add(new BingImage.BingBean(Color.GRAY,0.25f,"经济法","20min"));
-        data.add(new BingImage.BingBean(Color.GREEN,0.05f,"税法","hahaha"));
-        bingImage.setData(data);
+        data.add(new BingImage.BingBean(Color.BLUE,0.08f,"","嘿嘿嘿税法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.GRAY,0.01f,"","经济法嘿嘿嘿法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.GREEN,0.01f,"","税法法法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.BLACK,0.25f,"","嘿嘿法法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.LTGRAY,0.35f,"","嘿嘿嘿法法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.GREEN,0.3f,"","gg法法法法法法法法嘿嘿税"));
+
+        int count =0;
+        float totalPrecent=0;
+        List<BingImage.BingBean> ds=new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            BingImage.BingBean bingBean = data.get(i);
+            if (bingBean.getPercent()<=0.09f){
+                bingBean.setPercent(0.09f);
+                count++;
+            }else{
+                totalPrecent+=bingBean.getPercent();
+            }
+            ds.add(bingBean);
+        }
+        float num=1-count*0.09f;
+        for (int i = 0; i < ds.size(); i++) {
+            BingImage.BingBean bingBean = ds.get(i);
+            if (bingBean.getPercent()>0.09f){
+                bingBean.setPercent(num*bingBean.getPercent()/totalPrecent);
+            }
+        }
+
+        bingImage.setData(ds);
         qulineView= (QulineView) findViewById(R.id.qulineView);
         ArrayMap<String,Float> datas=new ArrayMap<>();
         datas.put("1",10f);

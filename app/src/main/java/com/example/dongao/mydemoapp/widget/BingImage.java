@@ -8,6 +8,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.example.dongao.mydemoapp.R;
@@ -32,7 +33,7 @@ public class BingImage extends View {
     private Paint mPaint;
     private Paint xcirclePaint;
     private Paint textPaint;
-    private float startAngle=0;
+    private float startAngle=250;
     private float angle=360f;
     private RectF rectF;
     private PointF center;
@@ -52,7 +53,9 @@ public class BingImage extends View {
 
         textPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.GRAY);
-        textPaint.setTextSize(30);
+        float v1 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, context.getResources().getDisplayMetrics());
+        float v = context.getResources().getDisplayMetrics().density*10 + 0.5f;
+        textPaint.setTextSize(v);
         if (isInEditMode()){
             bingBeenList=new ArrayList<>();
             bingBeenList.add(new BingImage.BingBean(Color.BLACK,0.4f,"审计","gg"));
@@ -155,16 +158,34 @@ public class BingImage extends View {
                 //画横线和字
 
                 float textHight = textPaint.getTextSize();
+                String description = bingBean.getDescription();
+                String name = bingBean.getName();
                 if (endX<center.x){
                     canvas.drawLine(endX,endY,leftAndRightPadding,endY,xcirclePaint);
-                    canvas.drawText(bingBean.getDescription(),leftAndRightPadding,endY-textHight+10,textPaint);
-                    canvas.drawText(bingBean.getName(),leftAndRightPadding,endY+textHight+5,textPaint);
+                    float contentSize = endX - leftAndRightPadding;
+                    float textSize = textPaint.measureText(description)+leftAndRightPadding+textPaint.measureText("...");
+                    if (contentSize < textSize){
+                        float size = textSize - contentSize ;
+                        float ysize = size / textPaint.getTextSize();
+                        int num= ysize > 1? Math.round(ysize) :1;
+                        description=description.substring(0,description.length()-num)+"...";
+                    }
+                    canvas.drawText(description,leftAndRightPadding,endY-textHight+textHight/2,textPaint);
+                    canvas.drawText(name,leftAndRightPadding,endY+textHight+5,textPaint);
                 }else{
-                    float nameLength = textPaint.measureText(bingBean.getName());
-                    float desLength = textPaint.measureText(bingBean.getDescription());
                     canvas.drawLine(endX,endY,width-leftAndRightPadding,endY,xcirclePaint);
-                    canvas.drawText(bingBean.getDescription(),width-leftAndRightPadding-desLength,endY-textHight+10,textPaint);
-                    canvas.drawText(bingBean.getName(),width-leftAndRightPadding-nameLength,endY+textHight+5,textPaint);
+                    float contentSize = width - leftAndRightPadding - endX;
+                    float textSize = textPaint.measureText(description)+leftAndRightPadding+textPaint.measureText("...");
+                    if (contentSize < textSize){
+                        float size = textSize - contentSize ;
+                        float ysize = size / textPaint.getTextSize();
+                        int num= ysize > 1? Math.round(ysize) :1;
+                        description=description.substring(0,description.length()-num)+"...";
+                    }
+                    float nameLength = textPaint.measureText(name);
+                    float desLength = textPaint.measureText(description);
+                    canvas.drawText(description,width-leftAndRightPadding-desLength,endY-textHight+textHight/2,textPaint);
+                    canvas.drawText(name,width-leftAndRightPadding-nameLength,endY+textHight+5,textPaint);
                 }
             }
             mPaint.setColor(Color.WHITE);

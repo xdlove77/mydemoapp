@@ -35,18 +35,18 @@
             android:exported="false" />
 
         <activity android:name=".VerificationETDemoActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ViewAnimationUtilsActivity" />
         <activity android:name=".ExpandableDemoActivity">
 
         </activity>
         <activity android:name=".MySelfBingImageDemoActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
