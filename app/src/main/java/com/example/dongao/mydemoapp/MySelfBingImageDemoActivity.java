@@ -40,32 +40,41 @@ public class MySelfBingImageDemoActivity extends Activity {
         data.add(new BingImage.BingBean(Color.BLUE,0.08f,"","嘿嘿嘿税法法法法法嘿嘿税"));
         data.add(new BingImage.BingBean(Color.GRAY,0.01f,"","经济法嘿嘿嘿法法法嘿嘿税"));
         data.add(new BingImage.BingBean(Color.GREEN,0.01f,"","税法法法法法法法嘿嘿税"));
-        data.add(new BingImage.BingBean(Color.BLACK,0.25f,"","嘿嘿法法法法法法嘿嘿税"));
-        data.add(new BingImage.BingBean(Color.LTGRAY,0.35f,"","嘿嘿嘿法法法法法法嘿嘿税"));
-        data.add(new BingImage.BingBean(Color.GREEN,0.3f,"","gg法法法法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.BLACK,0.15f,"","嘿嘿法法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.LTGRAY,0.01f,"","嘿嘿嘿法法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.GREEN,0.74f,"","gg法法法法法法法法嘿嘿税"));
 
         int count =0;
         float totalPrecent=0;
+        float total=0;
         List<BingImage.BingBean> ds=new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             BingImage.BingBean bingBean = data.get(i);
-            if (bingBean.getPercent()<=0.09f){
-                bingBean.setPercent(0.09f);
+            if (bingBean.getPercent()<=0.1f){
+                bingBean.setPercent(0.1f);
                 count++;
             }else{
                 totalPrecent+=bingBean.getPercent();
             }
+            total+=bingBean.getPercent();
             ds.add(bingBean);
         }
-        float num=1-count*0.09f;
-        for (int i = 0; i < ds.size(); i++) {
+        float part=1/total;
+        for (int i = 0; i < ds.size() ; i++) {
             BingImage.BingBean bingBean = ds.get(i);
-            if (bingBean.getPercent()>0.09f){
-                bingBean.setPercent(num*bingBean.getPercent()/totalPrecent);
-            }
+            bingBean.setPercent(bingBean.getPercent()*part);
         }
+//        float num=1-count*0.09f;
+//        for (int i = 0; i < ds.size(); i++) {
+//            BingImage.BingBean bingBean = ds.get(i);
+//            if (bingBean.getPercent()>0.09f){
+//                bingBean.setPercent(num*bingBean.getPercent()/totalPrecent);
+//            }
+//        }
 
         bingImage.setData(ds);
+
+
         qulineView= (QulineView) findViewById(R.id.qulineView);
         ArrayMap<String,Float> datas=new ArrayMap<>();
         datas.put("1",10f);

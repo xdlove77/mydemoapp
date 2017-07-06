@@ -6,26 +6,41 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.dongao.mydemoapp.MySelfBingImageDemoActivity">
-
-    <com.example.dongao.mydemoapp.widget.BingImage
-        android:id="@+id/bingImage"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp" />
+        android:layout_height="match_parent">
 
-    <com.example.dongao.mydemoapp.widget.QulineView
-        android:id="@+id/qulineView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:onClick="onClick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="切换type"
-        />
+            <com.example.dongao.mydemoapp.widget.BingImage
+                android:id="@+id/bingImage"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
 
-    <com.example.dongao.mydemoapp.widget.bezier.WaveBezier
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+            <com.example.dongao.mydemoapp.widget.QulineView
+                android:id="@+id/qulineView"
+                android:background="#ff8d34"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+            <Button
+                android:onClick="onClick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="切换type"
+                />
+
+            <com.example.dongao.mydemoapp.widget.bezier.WaveBezier
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+
+
 
 </LinearLayout>

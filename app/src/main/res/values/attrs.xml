@@ -30,7 +30,24 @@
     </declare-styleable>
     
     <declare-styleable name="QulineView">
-        <attr name="lineWidth" format="dimension"/>
-        <attr name="scale_text_size" format="dimension"/>
+        <attr name="line_Width" format="dimension"/>
+        <attr name="line_Color" format="color"/>
+
+        <attr name="xyLineWidth" format="dimension"/>
+        <attr name="xyLineColor" format="color"/>
+
+        <attr name="text_size" format="dimension"/>
+        <attr name="text_color" format="color"/>
+
+        <attr name="pointSize" format="dimension"/>
+        <attr name="pointColor" format="color"/>
+
+        <attr name="transitionStartColor" format="color"/>
+        <attr name="transitionEndColor" format="color"/>
+
+        <attr name="lineType" format="enum">
+            <enum name="curve" value="1"/>
+            <enum name="polyline" value="2"/>
+        </attr>
     </declare-styleable>
 </resources>

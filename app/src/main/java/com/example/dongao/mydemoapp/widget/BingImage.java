@@ -33,7 +33,7 @@ public class BingImage extends View {
     private Paint mPaint;
     private Paint xcirclePaint;
     private Paint textPaint;
-    private float startAngle=250;
+    private float startAngle=270;
     private float angle=360f;
     private RectF rectF;
     private PointF center;
