@@ -63,7 +63,7 @@ public class MyQulineView extends View {
     private float minValue;
 
     private List<String> leftData;
-    private ArrayMap<String,Float> datas;
+    private List<Float> datas;
     private float pointSize;
 
     private int transitionStartColor;
@@ -184,8 +184,8 @@ public class MyQulineView extends View {
 
         if (lineType == LINE_TYPE_CURVE){//设置曲线的path
             for (int i = 0; i < datas.size()-1; i++) {
-                float svalue = datas.valueAt(i) ;
-                float evalue = datas.valueAt(i+1)  ;
+                float svalue = datas.get(i) ;
+                float evalue = datas.get(i+1)  ;
                 PointF sp=new PointF(xlenghtScale*i+ypx,ypy-svalue*ylenghtScale );
                 PointF ep=new PointF(xlenghtScale*(i+1)+ypx,ypy-evalue*ylenghtScale );
                 float wt=(sp.x+ep.x)/2;
@@ -201,8 +201,8 @@ public class MyQulineView extends View {
             }
         }else if (lineType == LINE_TYPE_POLYLINE){//设置折线的path
             for (int i = 0; i < datas.size()-1; i++) {
-                float svalue = datas.valueAt(i) ;
-                float evalue = datas.valueAt(i+1) ;
+                float svalue = datas.get(i) ;
+                float evalue = datas.get(i+1) ;
                 PointF sp=new PointF(xlenghtScale*i+ypx,ypy-svalue*ylenghtScale );
                 PointF ep=new PointF(xlenghtScale*(i+1)+ypx,ypy-evalue*ylenghtScale );
                 if (i==0){
@@ -286,7 +286,7 @@ public class MyQulineView extends View {
      */
     private void drawPoint(float xlenghtScale, float ylenghtScale, float ypx, float ypy, Canvas canvas) {
         for (int i = 0; i < datas.size(); i++) {
-            float svalue = datas.valueAt(i) - minValue;
+            float svalue = datas.get(i) - minValue;
             PointF sp=new PointF(xlenghtScale*i+ypx,ypy-svalue*ylenghtScale);
             canvas.drawCircle(sp.x,sp.y,pointSize,pointPaint);
         }
@@ -322,15 +322,15 @@ public class MyQulineView extends View {
         invalidate();
     }
 
-    public void setData(ArrayMap<String,Float> datas){
+    public void setData(List<Float> datas){
         if (datas ==null || datas.size()<=0){
             throw new NullPointerException("bottomData is null or size is 0");
         }
         this.datas = datas;
         maxValue =0;
-        minValue = datas.valueAt(0);
+        minValue = datas.get(0);
         for (int i = 0; i < datas.size(); i++) {
-            float mv = datas.valueAt(i);
+            float mv = datas.get(i);
             maxValue = Math.max(mv,maxValue);
             minValue = Math.min(mv,minValue);
         }

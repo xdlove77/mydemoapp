@@ -37,12 +37,16 @@ public class MySelfBingImageDemoActivity extends Activity {
         setContentView(R.layout.activity_my_self_bing_image_demo);
         bingImage = (BingImage) findViewById(R.id.bingImage);
         List<BingImage.BingBean> data=new ArrayList<>();
-        data.add(new BingImage.BingBean(Color.BLUE,0.08f,"","嘿嘿嘿税法法法法法嘿嘿税"));
-        data.add(new BingImage.BingBean(Color.GRAY,0.01f,"","经济法嘿嘿嘿法法法嘿嘿税"));
-        data.add(new BingImage.BingBean(Color.GREEN,0.01f,"","税法法法法法法法嘿嘿税"));
-        data.add(new BingImage.BingBean(Color.BLACK,0.15f,"","嘿嘿法法法法法法嘿嘿税"));
-        data.add(new BingImage.BingBean(Color.LTGRAY,0.01f,"","嘿嘿嘿法法法法法法嘿嘿税"));
-        data.add(new BingImage.BingBean(Color.GREEN,0.74f,"","gg法法法法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.BLUE,0.0f,"","嘿嘿嘿税法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.GRAY,0.0f,"","经济法嘿嘿嘿法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.GREEN,0.0f,"","税法法法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.BLACK,0.0f,"","嘿嘿法法法法法法嘿嘿税"));
+        data.add(new BingImage.BingBean(Color.LTGRAY,0.0f,"","嘿嘿嘿法法法法法法嘿嘿税"));
+//        data.add(new BingImage.BingBean(Color.GREEN,0.1f,"","gg法法法法法法法法嘿嘿税"));
+//        data.add(new BingImage.BingBean(Color.BLUE,0.1f,"","gg法法法法法法法法嘿嘿税"));
+//        data.add(new BingImage.BingBean(Color.GRAY,0.f,"","gg法法法法法法法法嘿嘿税"));
+//        data.add(new BingImage.BingBean(Color.BLACK,0.1f,"","gg法法法法法法法法嘿嘿税"));
+//        data.add(new BingImage.BingBean(Color.LTGRAY,0.1f,"","gg法法法法法法法法嘿嘿税"));
 
         int count =0;
         float totalPrecent=0;

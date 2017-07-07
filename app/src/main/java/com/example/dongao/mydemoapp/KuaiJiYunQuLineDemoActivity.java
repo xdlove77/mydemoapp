@@ -19,14 +19,14 @@ public class KuaiJiYunQuLineDemoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_kuai_ji_yun_qu_line_demo);
 
         qulineView= (MyQulineView) findViewById(R.id.qulineView);
-        ArrayMap<String,Float> datas=new ArrayMap<>();
-        datas.put("1",110f);
-        datas.put("3",10f);
-        datas.put("6",80f);
-        datas.put("7",200f);
-        datas.put("10",140f);
-        datas.put("13",100f);
-        datas.put("14",20f);
+        List<Float> datas=new ArrayList<>();
+        datas.add(110f);
+        datas.add(10f);
+        datas.add(80f);
+        datas.add(200f);
+        datas.add(140f);
+        datas.add(100f);
+        datas.add(20f);
         qulineView.setData(datas);
 
         List<String> list=new ArrayList<>();
