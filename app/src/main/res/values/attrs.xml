@@ -11,6 +11,7 @@
         <attr name="drawItemCount" format="integer"/>
     </declare-styleable>
 
+    <!--侧边字母索引-->
     <declare-styleable name="SideBar">
         <attr name="bgColor" format="color"/>
         <attr name="txColor" format="color"/>
@@ -23,12 +24,14 @@
     </declare-styleable>
 
 
+    <!-- 验证码 -->
     <declare-styleable name="VerificationEditText">
         <attr name="codeTextSize" format="dimension"/>
         <attr name="codeTextColor" format="color"/>
         <attr name="codeLength" format="integer"/>
     </declare-styleable>
-    
+
+    <!-- 曲线 -->
     <declare-styleable name="QulineView">
         <attr name="line_Width" format="dimension"/>
         <attr name="line_Color" format="color"/>
@@ -45,9 +48,41 @@
         <attr name="transitionStartColor" format="color"/>
         <attr name="transitionEndColor" format="color"/>
 
+        <attr name="showPoint" format="boolean"/>
+
         <attr name="lineType" format="enum">
             <enum name="curve" value="1"/>
             <enum name="polyline" value="2"/>
+        </attr>
+    </declare-styleable>
+
+
+    <!-- 会计云曲线 -->
+    <declare-styleable name="MyQulineView">
+        <attr name="Myline_Width" format="dimension"/>
+        <attr name="Myline_Color" format="color"/>
+
+        <attr name="MyxyLineWidth" format="dimension"/>
+        <attr name="MyxyLineColor" format="color"/>
+
+        <attr name="Mytext_size" format="dimension"/>
+        <attr name="Mytext_color" format="color"/>
+
+        <attr name="MypointSize" format="dimension"/>
+        <attr name="MypointColor" format="color"/>
+
+        <attr name="MytransitionStartColor" format="color"/>
+        <attr name="MytransitionEndColor" format="color"/>
+
+        <attr name="MyshowPoint" format="boolean"/>
+
+        <attr name="QLineDistanceLRSideWidth" format="dimension"/>
+        <attr name="LineDistanceBottomTextSize" format="dimension"/>
+        <attr name="TextDistanceBottomLineSize" format="dimension"/>
+
+        <attr name="MylineType" format="enum">
+            <enum name="Mycurve" value="1"/>
+            <enum name="Mypolyline" value="2"/>
         </attr>
     </declare-styleable>
 </resources>

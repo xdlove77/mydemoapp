@@ -57,6 +57,7 @@ public class QulineView extends View {
     private float leftDataWidth;
 
     private float maxValue;
+    private float minValue;
 
     private List<String> leftData;
     private ArrayMap<String,Float> datas;
@@ -64,6 +65,7 @@ public class QulineView extends View {
 
     private int transitionStartColor;
     private int transitionEndColor;
+    private boolean showPoint;
 
     public QulineView(Context context) {
         this(context,null);
@@ -78,6 +80,7 @@ public class QulineView extends View {
         transitionEndColor=typedArray.getColor(R.styleable.QulineView_transitionEndColor
                 ,DEFULT_TRANSITION_END_COLOR);
         lineType=typedArray.getInt(R.styleable.QulineView_lineType,LINE_TYPE_CURVE);
+        showPoint =typedArray.getBoolean(R.styleable.QulineView_showPoint,false);
 
         initPaint(typedArray,context.getResources().getDisplayMetrics());
 
@@ -146,23 +149,17 @@ public class QulineView extends View {
         //根据数值算对应占用高度和宽度的比例
         float xlenghtScale=(width-ypx)/datas.size();
         xlenghtScale+=xlenghtScale/(datas.size()-1);
-        float ylenghtScale=(ypy-PADDING)/maxValue;
+        float ylenghtScale=(ypy-PADDING)/(maxValue- minValue);
 
         Path linePath=new Path();
         Path shadowPath=new Path();
 
         if (lineType == LINE_TYPE_CURVE){
             for (int i = 0; i < datas.size()-1; i++) {
-                float svalue = datas.valueAt(i);
-                float evalue = datas.valueAt(i+1);
-                PointF sp;
-                if (i==0){
-                    sp=new PointF(xlenghtScale*i+ypx,ypy);
-                }else{
-                    sp=new PointF(xlenghtScale*i+ypx,ypy-svalue*ylenghtScale+PADDING);
-                }
-
-                PointF ep=new PointF(xlenghtScale*(i+1)+ypx,ypy-evalue*ylenghtScale+PADDING);
+                float svalue = datas.valueAt(i) - minValue;
+                float evalue = datas.valueAt(i+1) - minValue;
+                PointF sp=new PointF(xlenghtScale*i+ypx,ypy-svalue*ylenghtScale);
+                PointF ep=new PointF(xlenghtScale*(i+1)+ypx,ypy-evalue*ylenghtScale);
                 float wt=(sp.x+ep.x)/2;
                 PointF p1=new PointF(wt,sp.y);
                 PointF p2=new PointF(wt,ep.y);
@@ -175,24 +172,26 @@ public class QulineView extends View {
 
                 //每个值对应的x轴数字
                 float btx=sp.x;
-                canvas.drawText(datas.keyAt(i),btx-textPaint.measureText(datas.keyAt(i))/2,height,textPaint);
+                float textSize = textPaint.measureText(datas.keyAt(i));
+                canvas.drawText(datas.keyAt(i),btx- textSize /2,ypy+10+textSize,textPaint);
                 if (i==datas.size()-2){
                     btx=ep.x;
-                    canvas.drawText(datas.keyAt(i+1),btx-textPaint.measureText(datas.keyAt(i))/2,height,textPaint);
+                    canvas.drawText(datas.keyAt(i+1),btx- textSize /2,ypy+10+textSize,textPaint);
                 }
 
             }
         }else if (lineType == LINE_TYPE_POLYLINE){
             for (int i = 0; i < datas.size()-1; i++) {
-                float svalue = datas.valueAt(i);
-                float evalue = datas.valueAt(i+1);
+                float svalue = datas.valueAt(i) - minValue;
+
+                float evalue = datas.valueAt(i+1) - minValue;
                 PointF sp;
                 if (i==0){
                     sp=new PointF(xlenghtScale*i+ypx,ypy);
                 }else{
-                    sp=new PointF(xlenghtScale*i+ypx,ypy-svalue*ylenghtScale+PADDING);
+                    sp=new PointF(xlenghtScale*i+ypx,ypy-svalue*ylenghtScale);
                 }
-                PointF ep=new PointF(xlenghtScale*(i+1)+ypx,ypy-evalue*ylenghtScale+PADDING);
+                PointF ep=new PointF(xlenghtScale*(i+1)+ypx,ypy-evalue*ylenghtScale);
                 if (i==0){
                     linePath.moveTo(sp.x,sp.y);
                     shadowPath.moveTo(sp.x,sp.y);
@@ -202,10 +201,11 @@ public class QulineView extends View {
 
                 //每个值对应的x轴数字
                 float btx=sp.x;
-                canvas.drawText(datas.keyAt(i),btx-textPaint.measureText(datas.keyAt(i))/2,height,textPaint);
+                float textSize = textPaint.measureText(datas.keyAt(i));
+                canvas.drawText(datas.keyAt(i),btx- textSize /2,ypy+10+textSize,textPaint);
                 if (i==datas.size()-2){
                     btx=ep.x;
-                    canvas.drawText(datas.keyAt(i+1),btx-textPaint.measureText(datas.keyAt(i))/2,height,textPaint);
+                    canvas.drawText(datas.keyAt(i+1),btx- textSize /2,ypy+10+textSize,textPaint);
                 }
             }
         }else{
@@ -219,7 +219,6 @@ public class QulineView extends View {
         shadowPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
         shadowPath.lineTo(width, ypy);
         shadowPath.lineTo(ypx, ypy);
-
         canvas.drawPath(shadowPath,shadowPaint);
 
         //画曲线
@@ -239,8 +238,9 @@ public class QulineView extends View {
             canvas.drawText(leftData.get(i),x,y,textPaint);
         }
 
-        //画点
-        drawPoint(xlenghtScale,ylenghtScale,ypx,ypy,canvas);
+        if (showPoint)
+            //画点
+            drawPoint(xlenghtScale,ylenghtScale,ypx,ypy,canvas);
 
     }
 
@@ -254,11 +254,8 @@ public class QulineView extends View {
      */
     private void drawPoint(float xlenghtScale, float ylenghtScale, float ypx, float ypy, Canvas canvas) {
         for (int i = 0; i < datas.size(); i++) {
-            float svalue = datas.valueAt(i);
-            PointF sp=new PointF(xlenghtScale*i+ypx,ypy-svalue*ylenghtScale+PADDING);
-            if (i==0){
-                sp=new PointF(xlenghtScale*i+ypx,ypy);
-            }
+            float svalue = datas.valueAt(i) - minValue;
+            PointF sp=new PointF(xlenghtScale*i+ypx,ypy-svalue*ylenghtScale);
             canvas.drawCircle(sp.x,sp.y,pointSize,pointPaint);
         }
     }
@@ -269,7 +266,7 @@ public class QulineView extends View {
      */
     public void setType(int lineType){
         this.lineType =lineType;
-        postInvalidate();
+        invalidate();
     }
 
     public void setLeftData(List<String> leftData){
@@ -282,7 +279,7 @@ public class QulineView extends View {
             float mwidth = textPaint.measureText(leftData.get(i));
             leftDataWidth = leftDataWidth <mwidth?mwidth: leftDataWidth;
         }
-        postInvalidate();
+        invalidate();
     }
 
     public void setData(ArrayMap<String,Float> datas){
@@ -291,11 +288,13 @@ public class QulineView extends View {
         }
         this.datas = datas;
         maxValue =0;
+        minValue=datas.valueAt(0);
         for (int i = 0; i < datas.size(); i++) {
             float mv = datas.valueAt(i);
-            maxValue = maxValue <mv?mv: maxValue;
+            maxValue = Math.max(mv,maxValue);
+            minValue = Math.min(mv,minValue);
         }
-        postInvalidate();
+        invalidate();
     }
 
     public void isNoData() {

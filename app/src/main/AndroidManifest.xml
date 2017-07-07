@@ -34,14 +34,13 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".VerificationETDemoActivity" >
-
-        </activity>
+        <activity android:name=".VerificationETDemoActivity"></activity>
         <activity android:name=".ViewAnimationUtilsActivity" />
-        <activity android:name=".ExpandableDemoActivity">
+        <activity android:name=".ExpandableDemoActivity"></activity>
+        <activity android:name=".MySelfBingImageDemoActivity">
 
         </activity>
-        <activity android:name=".MySelfBingImageDemoActivity">
+        <activity android:name=".KuaiJiYunQuLineDemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
