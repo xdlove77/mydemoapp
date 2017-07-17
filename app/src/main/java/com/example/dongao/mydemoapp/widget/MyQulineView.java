@@ -70,7 +70,6 @@ public class MyQulineView extends View {
     private int transitionEndColor;
     private boolean showPoint;
 
-    private int pointCount=0;
     private float lineDistanceBottomTextSize;
     private float textDistanceBottomLineSize;
     private float text_size;

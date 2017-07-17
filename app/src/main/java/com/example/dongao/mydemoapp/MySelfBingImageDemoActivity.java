@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +19,12 @@ import com.example.dongao.mydemoapp.widget.QulineView;
 
 import org.reactivestreams.Subscription;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
@@ -97,6 +106,32 @@ public class MySelfBingImageDemoActivity extends Activity {
         list.add("200m");
         qulineView.setLeftData(list);
 
+
+        ConnectivityManager connectivityManager= (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()){
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE ){
+                try {
+                    Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+
+                    for (NetworkInterface networkInterface =networkInterfaces.nextElement()
+                         ; networkInterfaces.hasMoreElements(); ) {
+                        Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+                        for (InetAddress i = inetAddresses.nextElement(); inetAddresses.hasMoreElements() ; ) {
+                            if (!i.isLoopbackAddress() && i instanceof Inet4Address)
+                                i.getHostAddress();
+                        }
+                    }
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                WifiManager wifiManager= (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                wifiInfo.getIpAddress();
+            }
+        }
     }
 
     public void onClick(View view){
