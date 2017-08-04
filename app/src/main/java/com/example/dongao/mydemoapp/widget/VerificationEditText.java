@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.text.InputFilter;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.EditText;
 
 import com.example.dongao.mydemoapp.R;
@@ -40,6 +41,8 @@ public class VerificationEditText extends EditText {
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         typedArray.recycle();
+
+        setCursorVisible(false);
     }
 
     @Override

@@ -35,19 +35,24 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".VerificationETDemoActivity"></activity>
+        <activity android:name=".VerificationETDemoActivity" />
         <activity android:name=".ViewAnimationUtilsActivity" />
-        <activity android:name=".ExpandableDemoActivity"></activity>
-        <activity android:name=".MySelfBingImageDemoActivity">
+        <activity android:name=".ExpandableDemoActivity" />
+        <activity android:name=".MySelfBingImageDemoActivity" />
+        <activity android:name=".KuaiJiYunQuLineDemoActivity">
 
         </activity>
-        <activity android:name=".KuaiJiYunQuLineDemoActivity">
+        <activity android:name=".StatusBarActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".colorbar.CustomColorBarActivity" />
+        <activity android:name=".colorbar.TranslucentBarActivity" />
+        <activity android:name=".colorbar.TransparentBarActivity" />
+        <activity android:name=".colorbar.HideBarActivity"/>
     </application>
 
 </manifest>
