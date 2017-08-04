@@ -12,6 +12,6 @@ public class CustomColorBarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_color_bar);
-        BarUtils.setBarColor(this, Color.GREEN,false);
+        BarUtils.setBarColor(this, Color.GREEN,true);
     }
 }

@@ -6,32 +6,66 @@
     android:layout_height="match_parent"
     tools:context="com.example.dongao.mydemoapp.colorbar.TranslucentBarActivity">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        />
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:orientation="vertical"
         >
-        <TextView
-            android:id="@+id/text"
-            android:text="assdfasdfasdfasdfasdfs"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/text"
+                android:text="ssdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
 
 
-        <TextView
-            android:text="assdfasdfasdfasdfasdfs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            />
-    </LinearLayout>
+            <TextView
+                android:text="assdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfs
+assdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfasdfasdfasdfasdfsassdfa
+sdfasdfasdfasdfsassdfasdfas1234654654"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+
 </RelativeLayout>

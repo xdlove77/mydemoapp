@@ -12,6 +12,6 @@ public class TranslucentBarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translucent_bar);
-        BarUtils.setBarColor(this,Color.GREEN,100,true);
+        BarUtils.setBarColorForDrawerLayout(this,Color.GREEN,100,true);
     }
 }

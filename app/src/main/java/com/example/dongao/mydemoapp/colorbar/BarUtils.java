@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntRange;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
@@ -36,33 +37,68 @@ public class BarUtils {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void setBarColor(Activity activity, @ColorInt int color, int alpha, boolean withNavBar){
+    public static void setBarColor(Activity activity, @ColorInt int color, @IntRange(from = 0,to = 255) int alpha, boolean withNavBar){
         Window window = activity.getWindow();
         ViewGroup decorView = (ViewGroup) window.getDecorView();
 
-        int finalColor = alpha==ALPHA? color
+        int finalColor = alpha==ALPHA? Color.rgb(Color.red(color),Color.green(color),Color.blue(color))
                 : alpha == 0 ? Color.TRANSPARENT
                 : Color.argb(alpha,Color.red(color),Color.green(color),Color.blue(color));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             if (alpha < ALPHA && alpha >= 0){
                 int option= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        |View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                        |View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                if (withNavBar )
+                    option|=View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+
                 decorView.setSystemUiVisibility(option);
             }
             window.setStatusBarColor(finalColor);
-            if (withNavBar){
+            if (withNavBar ){
                 window.setNavigationBarColor(finalColor);
             }
         }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             decorView.addView(createStatusBar(activity,finalColor));
-            if (withNavBar){
-                if (hasNavigationBar(activity)){
-                    window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            if (withNavBar && hasNavigationBar(activity)){
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                decorView.addView(createNavigationBar(activity,finalColor));
+            }
+        }
+    }
+
+
+    public static void setBarColorForDrawerLayout(Activity activity,@ColorInt int color,@IntRange(from = 0,to = 255)int alpha,boolean withNavBar){
+        Window window = activity.getWindow();
+        ViewGroup decorView = (ViewGroup) window.getDecorView();
+        int finalColor=alpha==ALPHA?Color.rgb(Color.red(color),Color.green(color),Color.blue(color))
+                :alpha==0?Color.TRANSPARENT:Color.argb(alpha,Color.red(color),Color.green(color),Color.blue(color));
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+
+            window.setStatusBarColor(Color.TRANSPARENT);
+
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            if (withNavBar && hasNavigationBar(activity)){
+                option|=View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+                window.setNavigationBarColor(Color.TRANSPARENT);
+            }
+            decorView.setSystemUiVisibility(option);
+
+            if (alpha!=0 ){
+                decorView.addView(createStatusBar(activity,finalColor));
+                if (hasNavigationBar(activity) && withNavBar)
                     decorView.addView(createNavigationBar(activity,finalColor));
-                }
+            }
+
+        }else if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            decorView.addView(createStatusBar(activity,finalColor));
+
+            if (hasNavigationBar(activity) && withNavBar){
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                decorView.addView(createNavigationBar(activity,finalColor));
             }
         }
     }
@@ -82,7 +118,7 @@ public class BarUtils {
         }
     }
 
-    private static View createNavigationBar(Activity activity, int color){
+    public static View createNavigationBar(Activity activity, int color){
         View navigationBar=new View(activity);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -94,7 +130,7 @@ public class BarUtils {
         return navigationBar;
     }
 
-    private static View createStatusBar(Activity activity, int color){
+    public static View createStatusBar(Activity activity, int color){
         View statusBarView=new View(activity);
         statusBarView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -104,7 +140,7 @@ public class BarUtils {
         return statusBarView;
     }
 
-    private static int measureStatusBarHeight(Activity activity) {
+    public static int measureStatusBarHeight(Activity activity) {
         int result=0;
         int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId>0){
@@ -113,7 +149,7 @@ public class BarUtils {
         return result;
     }
 
-    private static int measureNavigationBarHeight(Activity activity) {
+    public static int measureNavigationBarHeight(Activity activity) {
         int result=0;
         int resourceId = activity.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
         if (resourceId>0){
@@ -123,7 +159,7 @@ public class BarUtils {
     }
 
 
-    private static boolean hasNavigationBar(Activity activity) {
+    public static boolean hasNavigationBar(Activity activity) {
 
         WindowManager windowManager = activity.getWindowManager();
         Display display = windowManager.getDefaultDisplay();
