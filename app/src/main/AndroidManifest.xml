@@ -38,16 +38,18 @@
         <activity android:name=".VerificationETDemoActivity" />
         <activity android:name=".ViewAnimationUtilsActivity" />
         <activity android:name=".ExpandableDemoActivity" />
-        <activity android:name=".MySelfBingImageDemoActivity" />
-        <activity android:name=".KuaiJiYunQuLineDemoActivity">
+        <activity android:name=".MySelfBingImageDemoActivity" >
 
         </activity>
-        <activity android:name=".StatusBarActivity" >
+        <activity android:name=".KuaiJiYunQuLineDemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".StatusBarActivity" >
+
         </activity>
         <activity android:name=".colorbar.CustomColorBarActivity" />
         <activity android:name=".colorbar.TranslucentBarActivity" />

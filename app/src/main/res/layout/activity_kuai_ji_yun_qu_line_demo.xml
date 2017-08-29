@@ -63,8 +63,31 @@
         />
 </LinearLayout>
 
-    <com.example.dongao.mydemoapp.widget.DrawHeartView
+    <!--<com.example.dongao.mydemoapp.widget.DrawHeartView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.example.dongao.mydemoapp.widget.CircleProgressView
+            android:id="@+id/CircleProgressView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            />
+
+        <TextView
+            android:id="@+id/progressTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+
+    <com.example.dongao.mydemoapp.widget.ScrollerDemo
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="200dp" />
+
 
 </LinearLayout>

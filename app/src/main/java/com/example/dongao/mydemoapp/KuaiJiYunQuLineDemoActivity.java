@@ -3,9 +3,12 @@ package com.example.dongao.mydemoapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.ArrayMap;
+import android.view.View;
+import android.view.animation.LinearInterpolator;
+import android.widget.TextView;
 
+import com.example.dongao.mydemoapp.widget.CircleProgressView;
 import com.example.dongao.mydemoapp.widget.MyQulineView;
-import com.example.dongao.mydemoapp.widget.QulineView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,17 @@ public class KuaiJiYunQuLineDemoActivity extends AppCompatActivity {
         bottomBeens.add(new MyQulineView.MyQulineBottomBean("5月5日",true));
 //        bottomBeens.add(new MyQulineView.MyQulineBottomBean("6",true));
 //        bottomBeens.add(new MyQulineView.MyQulineBottomBean("7"));
+
         qulineView.setBottomData(bottomBeens);
+
+        final TextView progressTv= (TextView) findViewById(R.id.progressTv);
+        CircleProgressView circleProgressView = (CircleProgressView) findViewById(R.id.CircleProgressView);
+        circleProgressView.setDataWithAnim(0.6f,3000,new LinearInterpolator());
+        circleProgressView.setProgressListener(new CircleProgressView.CircleProgressLinstener() {
+            @Override
+            public void onProgress(float precent) {
+                progressTv.setText((int)(precent*100)+"%");
+            }
+        });
     }
 }
