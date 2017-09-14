@@ -29,7 +29,7 @@ import java.util.List;
 import dalvik.system.DexClassLoader;
 import dalvik.system.PathClassLoader;
 
-public class Main3Activity extends AppCompatActivity {
+public class PluginGetResActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private CollapsingToolbarLayout toolbarLayout;
 

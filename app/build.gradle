@@ -11,12 +11,33 @@ android {
         versionCode 3
         versionName "1.0"
     }
+
+    signingConfigs {
+        debug{
+            //从系统环境读取签名（sign.keystore）的密码
+//            storePassword System.getenv("KSPw")
+//            keyPassword System.getenv("KPw")
+            //从命令行输入签名密码
+//            storeFile file("../debug.keystore")
+//            storePassword System.console().readLine("\nkeystorePassword:")
+//            keyPassword System.console().readLine("\nkeyPassword:")
+//            keyAlias "dongao.keystore"
+        }
+    }
+
     buildTypes {
         debug {}
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+//        demodebug{
+//            //集成debug的buildTypes
+//            initWith debug
+//            //自定义appID后缀
+//            applicationIdSuffix '.heiheihei'
+//        }
     }
 
     repositories {
@@ -25,9 +46,9 @@ android {
         }
     }
 
-//    applicationVariants.all{ variant ->
-//        variant.outputs.each {output ->
-//            output.outputFile=new File(output.outputFile.parentFile, buildType.name+defaultConfig.versionCode)
+//    applicationVariants.all { variant ->
+//        variant.outputs.each { output ->
+//            output.outputFile=new File(output.outputFile.parent,"android_"+buildType.name+"_"+defaultConfig.versionCode+".apk")
 //        }
 //    }
 }
@@ -35,7 +56,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //    compile(name:'aar Name',ext:'aar')
-
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.7'
@@ -45,16 +65,68 @@ dependencies {
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.17'
     compile 'com.android.support:support-v4:23.4.0'
     testCompile 'junit:junit:4.12'
+    compile 'com.github.bumptech.glide:glide:4.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'org.greenrobot:eventbus:3.0.0'
+
 }
 
 ext {
     local = 'hello from build.gradle'
 }
-task printProperty << {
-    println local
-    println printProperty
-    if (project.hasProperty('cmd')) {
-        println cmd
+    task printProperty << {
+        println local
+        println printProperty
+        if (project.hasProperty('cmd')) {
+            println cmd
+        }
     }
+
+    //有action的task  与 dolast(hellolast) 类似
+    task helloAction << {
+        println 'hello from actionTask'
+    }
+
+    task hellolast{
+        doLast{
+            println 'hello from doLast'
+        }
+    }
+
+    //无action的 task
+    task hello {
+        println 'hello'
+    }
+
+    //bb引用 aa的成员变量
+    task aa{
+        ext.aas='asdf'
+    }
+    task bb <<{
+        println aa.aas
+    }
+
+
+4.times { counter ->
+    task "task$counter" << {
+        println "task$counter"
+    }
+}
+task3.dependsOn task1,task2,task0
+
+
+task loadFile <<{
+    def files=file('../app').listFiles().sort()
+    files.each { File file ->
+        if(file.isFile()){
+            ant.loadfile(srcFile:file,property:file.name)
+            println "fileName : $file.name"
+            println "${ant.properties[file.name]}"
+        }
+    }
+}
+
+task showFile <<{
 
 }

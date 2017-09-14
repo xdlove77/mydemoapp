@@ -72,8 +72,7 @@ public class Main2Activity extends AppCompatActivity {
         for (int i = 0; i < texts.length; i++) {
 
         }
-        Intent intent=new Intent(this,Main2Service.class);
-        startService(intent);
+
     }
     public void text(){
         for (int i = 0; i < 10; i++) {

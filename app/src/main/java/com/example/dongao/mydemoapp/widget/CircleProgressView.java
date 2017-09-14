@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,6 +126,9 @@ public class CircleProgressView extends View {
             }
         });
         animator.setDuration((long) (duration*p));
+        if (interpolator==null){
+            interpolator=new LinearInterpolator();
+        }
         animator.setInterpolator(interpolator);
         animator.start();
         animatorList.add(animator);
