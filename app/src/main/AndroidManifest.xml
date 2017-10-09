@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <!--   让指定的module不能使用这个权限
+    <!--
+       让指定的module不能使用这个权限
     <uses-permission android:name="android.permission.INTERNET"
         tools:node="remove"
         tools:selector="其他module包名"
@@ -16,7 +17,6 @@
         编译时覆盖指定module的sdk版本信息
     <uses-sdk tools:overrideLibrary="其他module包名"/>
     -->
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -38,7 +38,7 @@
         <activity android:name=".VerificationETDemoActivity" />
         <activity android:name=".ViewAnimationUtilsActivity" />
         <activity android:name=".ExpandableDemoActivity" />
-        <activity android:name=".MySelfBingImageDemoActivity"></activity>
+        <activity android:name=".MySelfBingImageDemoActivity" />
         <activity android:name=".KuaiJiYunQuLineDemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,12 +46,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StatusBarActivity"></activity>
+        <activity android:name=".StatusBarActivity" />
         <activity android:name=".colorbar.CustomColorBarActivity" />
         <activity android:name=".colorbar.TranslucentBarActivity" />
         <activity android:name=".colorbar.TransparentBarActivity" />
         <activity android:name=".colorbar.HideBarActivity" />
+        <activity android:name=".RecyclerViewItemCanSeeActivity">
 
+        </activity>
     </application>
 
 </manifest>

@@ -106,5 +106,10 @@
             />
     </com.example.dongao.mydemoapp.widget.ScrollMenuLayout>
 
+    <com.example.dongao.mydemoapp.widget.AVLoadingImageView
+        android:id="@+id/avimage"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
 
 </LinearLayout>
