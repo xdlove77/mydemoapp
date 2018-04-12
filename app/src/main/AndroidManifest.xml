@@ -6,6 +6,10 @@
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
     <!--
        让指定的module不能使用这个权限
@@ -18,6 +22,7 @@
     <uses-sdk tools:overrideLibrary="其他module包名"/>
     -->
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -40,19 +45,29 @@
         <activity android:name=".ExpandableDemoActivity" />
         <activity android:name=".MySelfBingImageDemoActivity" />
         <activity android:name=".KuaiJiYunQuLineDemoActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!-- <intent-filter> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+
+
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity android:name=".StatusBarActivity" />
         <activity android:name=".colorbar.CustomColorBarActivity" />
         <activity android:name=".colorbar.TranslucentBarActivity" />
         <activity android:name=".colorbar.TransparentBarActivity" />
         <activity android:name=".colorbar.HideBarActivity" />
-        <activity android:name=".RecyclerViewItemCanSeeActivity">
+        <activity android:name=".RecyclerViewItemCanSeeActivity" />
+        <activity android:name=".ReflectionImageViewActivity">
 
+        </activity>
+        <activity android:name=".Rotate3DActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

@@ -8,14 +8,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.ArrayMap;
+import android.view.VelocityTracker;
 import android.view.View;
 
 import com.example.dongao.mydemoapp.widget.BingImage;
-import com.example.dongao.mydemoapp.widget.QulineView;
+//import com.example.dongao.mydemoapp.widget.QulineView;
 
 import org.reactivestreams.Subscription;
 
@@ -37,13 +39,14 @@ import io.reactivex.subscribers.SafeSubscriber;
 public class MySelfBingImageDemoActivity extends Activity {
 
     private BingImage bingImage;
-    private QulineView qulineView;
+//    private QulineView qulineView;
     private boolean isPolyline=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_self_bing_image_demo);
+
         bingImage = (BingImage) findViewById(R.id.bingImage);
         List<BingImage.BingBean> data=new ArrayList<>();
         data.add(new BingImage.BingBean(Color.BLUE,0.0f,"","嘿嘿嘿税法法法法法嘿嘿税"));
@@ -88,54 +91,31 @@ public class MySelfBingImageDemoActivity extends Activity {
         bingImage.setData(ds);
 
 
-        qulineView= (QulineView) findViewById(R.id.qulineView);
-        ArrayMap<String,Float> datas=new ArrayMap<>();
-        datas.put("1",10f);
-        datas.put("3",100f);
-        datas.put("4",110f);
-        datas.put("5",80f);
-        datas.put("6",50f);
-        datas.put("7",200f);
-        datas.put("8",140f);
-        qulineView.setData(datas);
-        List<String> list=new ArrayList<>();
-        list.add("10m");
-        list.add("57.5m");
-        list.add("105m");
-        list.add("152.5m");
-        list.add("200m");
-        qulineView.setLeftData(list);
+//        qulineView= (QulineView) findViewById(R.id.qulineView);
+//        ArrayMap<String,Float> datas=new ArrayMap<>();
+//        datas.put("1",10f);
+//        datas.put("3",100f);
+//        datas.put("4",110f);
+//        datas.put("5",80f);
+//        datas.put("6",50f);
+//        datas.put("7",200f);
+//        datas.put("8",140f);
+//        qulineView.setData(datas);
 
 
-        ConnectivityManager connectivityManager= (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()){
-            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE ){
-                try {
-                    Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+    }
 
-                    for (NetworkInterface networkInterface =networkInterfaces.nextElement()
-                         ; networkInterfaces.hasMoreElements(); ) {
-                        Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
-                        for (InetAddress i = inetAddresses.nextElement(); inetAddresses.hasMoreElements() ; ) {
-                            if (!i.isLoopbackAddress() && i instanceof Inet4Address)
-                                i.getHostAddress();
-                        }
-                    }
-                } catch (SocketException e) {
-                    e.printStackTrace();
-                }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Looper.myQueue().addIdleHandler(() -> {
 
-            }else{
-                WifiManager wifiManager= (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                wifiInfo.getIpAddress();
-            }
-        }
+            return false;
+        });
     }
 
     public void onClick(View view){
-        int type =(isPolyline =!isPolyline)?QulineView.LINE_TYPE_POLYLINE:QulineView.LINE_TYPE_CURVE;
-        qulineView.setType(type);
+//        int type =(isPolyline =!isPolyline)?QulineView.LINE_TYPE_POLYLINE:QulineView.LINE_TYPE_CURVE;
+//        qulineView.setType(type);
     }
 }

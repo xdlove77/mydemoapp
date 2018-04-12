@@ -83,11 +83,11 @@
 
         <!--/>-->
 
-    <com.example.dongao.mydemoapp.widget.MyProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!--<com.example.dongao.mydemoapp.widget.MyProgressBar-->
+        <!--android:id="@+id/progressBar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
-    </com.example.dongao.mydemoapp.widget.MyProgressBar>
+    <!--</com.example.dongao.mydemoapp.widget.MyProgressBar>-->
 
 </RelativeLayout>

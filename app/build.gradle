@@ -3,15 +3,17 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
-
     defaultConfig {
         applicationId "com.example.dongao.mydemoapp"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 3
         versionName "1.0"
-    }
 
+        jackOptions {
+            enabled true
+        }
+    }
     signingConfigs {
         debug {
             //从系统环境读取签名（sign.keystore）的密码
@@ -24,7 +26,6 @@ android {
 //            keyAlias "dongao.keystore"
         }
     }
-
     buildTypes {
         debug {}
         release {
@@ -39,23 +40,29 @@ android {
 //            applicationIdSuffix '.heiheihei'
 //        }
     }
-
     repositories {
         flatDir {
             dirs 'libs'
         }
     }
-
 //    applicationVariants.all { variant ->
 //        variant.outputs.each { output ->
 //            output.outputFile=new File(output.outputFile.parent,"android_"+buildType.name+"_"+defaultConfig.versionCode+".apk")
 //        }
 //    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //    compile(name:'aar Name',ext:'aar')
+    compile project(':refresh-layout')
+    compile files('lib/apache-ant-1.8.2.jar')
+    compile files('libs/apache-ant-1.8.2.jar')
     compile 'io.reactivex.rxjava2:rxjava:2.0.7'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -64,9 +71,9 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'org.greenrobot:eventbus:3.0.0'
-    testCompile 'junit:junit:4.12'
     compile 'com.jakewharton:butterknife:8.8.1'
-    compile project(':refresh-layout')
+    compile 'com.android.support:support-v4:23.4.0'
+    testCompile 'junit:junit:4.12'
 }
 
 ext {
@@ -78,22 +85,6 @@ task printProperty << {
     if (project.hasProperty('cmd')) {
         println cmd
     }
-}
-
-//有action的task  与 dolast(hellolast) 类似
-task helloAction << {
-    println 'hello from actionTask'
-}
-
-task hellolast {
-    doLast {
-        println 'hello from doLast'
-    }
-}
-
-//无action的 task
-task hello {
-    println 'hello'
 }
 
 //bb引用 aa的成员变量
@@ -112,7 +103,6 @@ task bb << {
 }
 task3.dependsOn task1, task2, task0
 
-
 //task loadFile << {
 //    def files = file('../app').listFiles().sort()
 //    files.each { File file ->
@@ -123,3 +113,182 @@ task3.dependsOn task1, task2, task0
 //        }
 //    }
 //}
+
+//Groovy 语法--------------------------
+
+task groovy << {}
+
+def noAgr() {//无参的
+    println "noAgr"
+}
+
+def oneAgr(n) {//一个参数的
+    println "oneAgr : $n"
+    n
+}
+
+oneAgr 3//调用一个参数的
+def twoAgr(n, m) {
+    println "twoAgr : $n --- $m"
+    n + m
+}
+
+twoAgr 1, 2 //调用俩个的
+twoAgr oneAgr(3), 2 //这么写一定要有括号
+
+//闭包的定义和传递---------------------------------------
+def func = {//闭包的函数  就是没有()
+    println "$aa.aas"
+}
+func()//调用meger函数
+
+def bar = func//闭包可以在不同变量中传递
+def baz = bar
+baz()
+
+//闭包的使用---------------------------------------
+def doubleIt = { x -> x + x }
+
+def applyTwice(func, agr) {
+    func(func(agr))
+}
+
+def foo = 5
+def result = applyTwice(doubleIt, foo)
+println "gaoji use : $result"
+
+//list-------------------------------------------
+def list = ["aaa", "bbb", "ccc"]//list定义 类似java数组
+def printItem = { item -> print "$item " }
+//变量list  each里可传 闭包函数 或者直接写
+list.each(printItem)
+list.each { print " $it " }
+
+//定义类------------------------------------------
+class GroovyGetter { //成员变量自动创建get和set
+    String msg = "asdf"
+
+    def printSelf() { println "$msg" }
+}
+
+def GroovyGetter gg = new GroovyGetter()
+gg.printSelf()
+gg.msg = "fdsa"
+gg.printSelf()
+
+//将类设置（代理）给闭包----------------------------
+def closure = {
+    msg = "hahaha"
+    printSelf()
+}
+closure.delegate = gg
+closure()
+
+//task和依赖关系-------------------------------------------
+task chuanxie {
+    dependsOn "chuanwazi" //穿鞋依赖穿袜子 先执行穿袜子
+    doLast {
+        println "chuanxie"
+    }
+}
+
+task chuanwazi {
+    doLast {
+        println "chuanwazi"
+    }
+}
+
+task xizhao {
+    shouldRunAfter "shuaya" //洗澡应该在刷牙之后
+    doLast {
+        println "xizhao"
+    }
+}
+
+task chifan {
+    finalizedBy "shuaya" //吃饭后再刷牙
+    doLast {
+        println "chifan"
+    }
+}
+
+task shuaya {
+    doLast {
+        println "shuaya"
+    }
+}
+
+
+task shunxu {
+    dependsOn = ["xizhao", "chifan", "chuanxie"]
+}
+
+chuanxie.mustRunAfter xizhao
+
+task matchT {
+    dependsOn tasks.matching { task -> task.name.startsWith("shunxu") }
+}
+
+//task copy文件------------------------------
+task cpImages(type: Copy) {
+    from 'images'
+    into 'build'
+}
+task cpJpegs(type: Copy) {
+    from 'images'
+    include '*.jpg'
+    into 'build'
+}
+
+task cpImageFolders(type: Copy) {
+    from('images') {
+        include '*.jphg'
+        into 'jpeg'
+    }
+    from('images') {
+        include '*.gif'
+        into 'gif'
+    }
+    into 'build'
+}
+//压缩----------------------------
+task zipImage(type: Zip) {
+    baseName 'images'
+    destinationDir = file 'build'
+    from 'images'
+}
+task zip(type: Zip) {
+    baseName 'images'
+    destinationDir = file('build')
+    from('images') {
+        include '*.jpg'
+        into 'jpg'
+    }
+    from('images') {
+        include '*.gif'
+        into 'gif'
+    }
+}
+
+//删除
+task deleteBuild(type: Delete) {
+    delete 'build'
+}
+
+ext {
+    greetting = "haha"
+}
+
+task printhaha << {
+    println greetting
+}
+
+//创建自己的任务类--------------------------
+class MyTask extends DefaultTask {
+    @TaskAction
+    void doAction() {
+        println "my creat Task"
+    }
+}
+
+task doMyTask(type: MyTask)
