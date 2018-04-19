@@ -85,4 +85,10 @@
             <enum name="Mypolyline" value="2"/>
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="ScrollTabsLayout">
+        <attr name="columns" format="integer"/>
+        <attr name="rows" format="integer"/>
+        <attr name="lineHeight" format="dimension"/>
+    </declare-styleable>
 </resources>
