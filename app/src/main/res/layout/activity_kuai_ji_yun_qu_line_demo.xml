@@ -61,6 +61,8 @@
         app:MytransitionStartColor="#6cffffff"
         app:MytransitionEndColor="#00ffffff"
         />
+
+
 </LinearLayout>
 
     <!--<com.example.dongao.mydemoapp.widget.DrawHeartView-->
