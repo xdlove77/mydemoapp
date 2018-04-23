@@ -157,15 +157,10 @@ public class ScrollTabsLayout extends ViewGroup {
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        Log.d("ggg","left = "+l+" : top = "+t+" : oldleft = "+oldl+" : oldtop = "+oldt);
-        Log.d("ggg","finalX = "+scroller.getFinalX());
         if (scrollTabListener!=null){
-            if (l==scroller.getFinalX()){
-                scrollTabListener.scrolling(l-oldl);
+            scrollTabListener.scrolling(l-oldl);
+            if (l==scroller.getFinalX())
                 scrollTabListener.scrollEnd(scroller.getFinalX()/getWidth());
-            }else{
-                scrollTabListener.scrolling(l-oldl);
-            }
         }
     }
 
