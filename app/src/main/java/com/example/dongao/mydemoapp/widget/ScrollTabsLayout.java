@@ -3,12 +3,14 @@ package com.example.dongao.mydemoapp.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
 import com.example.dongao.mydemoapp.R;
@@ -30,8 +32,10 @@ public class ScrollTabsLayout extends ViewGroup {
     private ScrollTabListener scrollTabListener;
     private int touchSlop;
     private float downX;
+    private float firstX;
     private int left;
     private int right;
+    private int scrollDuration;
 
     public ScrollTabsLayout(Context context) {
         this(context, null);
@@ -40,7 +44,6 @@ public class ScrollTabsLayout extends ViewGroup {
     public ScrollTabsLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setClickable(true);
-        scroller = new Scroller(context);
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
@@ -49,6 +52,15 @@ public class ScrollTabsLayout extends ViewGroup {
         rows = typedArray.getInt(R.styleable.ScrollTabsLayout_rows, 1);// todo 默认1行
         lineHeight = typedArray.getDimensionPixelSize(R.styleable.ScrollTabsLayout_lineHeight, (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 100.0f, context.getResources().getDisplayMetrics()));// todo 每行高度
+        scrollDuration=typedArray.getInt(R.styleable.ScrollTabsLayout_scrollDuration, 200);// todo 默认200ms
+        int interpolatorId=typedArray.getResourceId(R.styleable.ScrollTabsLayout_scrollDuration,-1);// todo 默认线性插值器
+        Interpolator interpolator=null;
+        if (interpolatorId==-1)
+            interpolator=new LinearInterpolator();
+        else
+            interpolator= AnimationUtils.loadInterpolator(context, interpolatorId);
+        scroller = new Scroller(context,interpolator);
+
         if (columns <= 0 || rows <= 0 || lineHeight < 0)
             throw new IllegalArgumentException("看源码吧 sb");
         typedArray.recycle();
@@ -109,11 +121,13 @@ public class ScrollTabsLayout extends ViewGroup {
         float x = ev.getX();
         switch (ev.getAction()){
             case MotionEvent.ACTION_DOWN:
-                downX = x;
+                firstX = downX = x;
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (Math.abs(x - downX)>touchSlop)
+                if (Math.abs((firstX = x) - downX)>touchSlop){
+                    requestDisallowInterceptTouchEvent(true);
                     return true;
+                }
                 downX=x;
                 break;
         }
@@ -138,7 +152,8 @@ public class ScrollTabsLayout extends ViewGroup {
                 downX=x;
                 break;
             case MotionEvent.ACTION_UP:
-                int index=(getScrollX()+getWidth()/2)/getWidth();
+                boolean scrollGoLeft=event.getX() - firstX >0;
+                int index=(getScrollX()+getWidth()/2+ (scrollGoLeft?-getWidth()/6:getWidth()/6))/getWidth();
                 int dist=index*getWidth()-getScrollX();
                 scroller.startScroll(getScrollX(),0,dist,0,200);
                 invalidate();
@@ -175,6 +190,32 @@ public class ScrollTabsLayout extends ViewGroup {
     public void setLineHeight(int lineHeight) {
         this.lineHeight = lineHeight;
     }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getLineHeight() {
+        return lineHeight;
+    }
+
+    public int getScrollDuration() {
+        return scrollDuration;
+    }
+
+    public void setInterpolator(Interpolator interpolator){
+        scroller=new Scroller(getContext(),interpolator);
+    }
+
+    public void setScrollDuration(int scrollDuration) {
+        this.scrollDuration = scrollDuration;
+    }
+
+
 
     public void setScrollTabListener(ScrollTabListener scrollTabListener) {
         this.scrollTabListener = scrollTabListener;

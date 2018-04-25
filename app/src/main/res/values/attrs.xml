@@ -90,5 +90,7 @@
         <attr name="columns" format="integer"/>
         <attr name="rows" format="integer"/>
         <attr name="lineHeight" format="dimension"/>
+        <attr name="scrollDuration" format="integer"/>
+        <attr name="scrollInterpolator" format="reference"/>
     </declare-styleable>
 </resources>
