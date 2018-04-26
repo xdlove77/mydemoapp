@@ -54,13 +54,13 @@ public class ScrollTabsDemoActivity extends AppCompatActivity implements ScrollT
 
     @Override
     public void scrollEnd(int page) {
-        Log.d("hhh", "page = "+page);
+//        Log.d("hhh", "page = "+page);
     }
 
     private int distance=0;
     @Override
     public void scrolling(int dist) {
         distance+=dist;
-        Log.d("hhh","distance = "+distance);
+//        Log.d("hhh","distance = "+distance);
     }
 }

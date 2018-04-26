@@ -3,8 +3,10 @@ package com.example.dongao.mydemoapp.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -36,6 +38,8 @@ public class ScrollTabsLayout extends ViewGroup {
     private int left;
     private int right;
     private int scrollDuration;
+    private VelocityTracker velocityTracker;
+    private int maxVelocity;
 
     public ScrollTabsLayout(Context context) {
         this(context, null);
@@ -44,6 +48,8 @@ public class ScrollTabsLayout extends ViewGroup {
     public ScrollTabsLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setClickable(true);
+        velocityTracker=VelocityTracker.obtain();
+        maxVelocity=ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
@@ -126,6 +132,7 @@ public class ScrollTabsLayout extends ViewGroup {
             case MotionEvent.ACTION_MOVE:
                 if (Math.abs((firstX = x) - downX)>touchSlop){
                     requestDisallowInterceptTouchEvent(true);
+                    velocityTracker.addMovement(ev);
                     return true;
                 }
                 downX=x;
@@ -138,13 +145,16 @@ public class ScrollTabsLayout extends ViewGroup {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()){
             case MotionEvent.ACTION_MOVE:
+                velocityTracker.addMovement(event);
                 float x = event.getX();
                 int scrollx= (int) (downX-x);
                 if (getScrollX()+scrollx<left){
                     scrollTo(left,0);
+                    velocityTracker.clear();
                     return true;
                 }else if (getScrollX() + scrollx +getWidth() > right){
                     scrollTo(right-getWidth(),0);
+                    velocityTracker.clear();
                     return true;
                 }else{
                     scrollBy(scrollx,0);
@@ -152,10 +162,25 @@ public class ScrollTabsLayout extends ViewGroup {
                 downX=x;
                 break;
             case MotionEvent.ACTION_UP:
-                boolean scrollGoLeft=event.getX() - firstX >0;
-                int index=(getScrollX()+getWidth()/2+ (scrollGoLeft?-getWidth()/6:getWidth()/6))/getWidth();
+                velocityTracker.addMovement(event);
+                velocityTracker.computeCurrentVelocity(1000,maxVelocity);
+                float xVelocity = velocityTracker.getXVelocity();
+                velocityTracker.clear();
+                Log.d("hhh","xVelocity = "+xVelocity);
+                int index=0;
+                int duration = scrollDuration;
+                if (xVelocity>300 || xVelocity <-300){
+                    duration=duration/4;
+                    if (xVelocity<0){
+                        index=(getScrollX()+getWidth())/getWidth();
+                    }else{
+                        index=(getScrollX()-getWidth())/getWidth();
+                    }
+                }else{
+                    index=(getScrollX()+getWidth()/2)/getWidth();
+                }
                 int dist=index*getWidth()-getScrollX();
-                scroller.startScroll(getScrollX(),0,dist,0,200);
+                scroller.startScroll(getScrollX(),0,dist,0,duration);
                 invalidate();
                 break;
         }
