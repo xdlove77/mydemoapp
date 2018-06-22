@@ -22,6 +22,7 @@ import com.example.dongao.mydemoapp.R;
  */
 
 public class ScrollTabsLayout extends ViewGroup {
+    private static final int MIN_FLING_VELOCITY = 400; // dips
 
     private int columns;
     private int rows;
@@ -40,6 +41,7 @@ public class ScrollTabsLayout extends ViewGroup {
     private int scrollDuration;
     private VelocityTracker velocityTracker;
     private int maxVelocity;
+    private int minVelocity;
 
     public ScrollTabsLayout(Context context) {
         this(context, null);
@@ -48,9 +50,11 @@ public class ScrollTabsLayout extends ViewGroup {
     public ScrollTabsLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setClickable(true);
+        ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
+        maxVelocity= viewConfiguration.getScaledMaximumFlingVelocity();
+        minVelocity=(int)(MIN_FLING_VELOCITY * context.getResources().getDisplayMetrics().density);
         velocityTracker=VelocityTracker.obtain();
-        maxVelocity=ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
-        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+        touchSlop = viewConfiguration.getScaledTouchSlop();
         screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ScrollTabsLayout);
@@ -166,15 +170,14 @@ public class ScrollTabsLayout extends ViewGroup {
                 velocityTracker.computeCurrentVelocity(1000,maxVelocity);
                 float xVelocity = velocityTracker.getXVelocity();
                 velocityTracker.clear();
-                Log.d("hhh","xVelocity = "+xVelocity);
                 int index=0;
                 int duration = scrollDuration;
-                if (xVelocity>300 || xVelocity <-300){
-                    duration=duration/4;
+                if (xVelocity>minVelocity || xVelocity <-minVelocity){
+                    duration=duration/2;
                     if (xVelocity<0){
                         index=(getScrollX()+getWidth())/getWidth();
                     }else{
-                        index=(getScrollX()-getWidth())/getWidth();
+                        index=getScrollX()/getWidth();
                     }
                 }else{
                     index=(getScrollX()+getWidth()/2)/getWidth();

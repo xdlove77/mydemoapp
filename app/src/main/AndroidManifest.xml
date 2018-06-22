@@ -43,25 +43,15 @@
         <activity android:name=".ViewAnimationUtilsActivity" />
         <activity android:name=".ExpandableDemoActivity" />
         <activity android:name=".MySelfBingImageDemoActivity" />
-        <activity android:name=".KuaiJiYunQuLineDemoActivity">
-
-        </activity>
-        <activity android:name=".StatusBarActivity" >
-
-        </activity>
+        <activity android:name=".KuaiJiYunQuLineDemoActivity"></activity>
+        <activity android:name=".StatusBarActivity"></activity>
         <activity android:name=".colorbar.CustomColorBarActivity" />
         <activity android:name=".colorbar.TranslucentBarActivity" />
         <activity android:name=".colorbar.TransparentBarActivity" />
         <activity android:name=".colorbar.HideBarActivity" />
-        <activity android:name=".RecyclerViewItemCanSeeActivity">
-
-        </activity>
-        <activity android:name=".ReflectionImageViewActivity">
-
-        </activity>
-        <activity android:name=".Rotate3DActivity">
-
-        </activity>
+        <activity android:name=".RecyclerViewItemCanSeeActivity"></activity>
+        <activity android:name=".ReflectionImageViewActivity"></activity>
+        <activity android:name=".Rotate3DActivity"></activity>
         <activity android:name=".ScrollTabsDemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
