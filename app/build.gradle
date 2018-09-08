@@ -292,3 +292,5 @@ class MyTask extends DefaultTask {
     }
 }
 task ha1()
+
+tash createByDev()
