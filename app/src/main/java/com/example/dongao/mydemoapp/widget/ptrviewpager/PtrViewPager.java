@@ -43,6 +43,7 @@ public class PtrViewPager extends ViewGroup {
     private float lastX;
     private float interceptX;
     private boolean needStopEvent;
+    private int scaledPagingTouchSlop;
 
     public PtrViewPager(Context context) {
         this(context, null);
@@ -55,7 +56,9 @@ public class PtrViewPager extends ViewGroup {
 
     private void init(Context context, AttributeSet attrs) {
         scroller = new Scroller(context);
-        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+        ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
+        touchSlop = viewConfiguration.getScaledTouchSlop();
+        scaledPagingTouchSlop = viewConfiguration.getScaledPagingTouchSlop();
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
@@ -114,8 +117,11 @@ public class PtrViewPager extends ViewGroup {
             float touchX = ev.getX();
             switch (ev.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
-                    lastX = downX = touchX;
-                    downScrollX = getScrollX();
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    if (ev.getPointerId(ev.getActionIndex())==0){
+                        lastX = downX = touchX;
+                        downScrollX = getScrollX();
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if (isRefresh || isLoadMore)
@@ -174,82 +180,94 @@ public class PtrViewPager extends ViewGroup {
         float touchX = event.getX();
         int scrollDist = getScrollX();
         float value = downX - touchX;
-        int scrollX = (int) (value >= 2f || value <= -2f ? value / 2 : value);
-        if (isLoadMore) {
-            if (scrollX <= 0 && lastX - touchX <= 0 && viewPager.canScrollHorizontally(-1) && scrollDist == 0) {
-                lastX = touchX;
-                return viewPager.onTouchEvent(event);
-            } else if (viewPager.canScrollHorizontally(1)) {
-                lastX = touchX;
-                return viewPager.onTouchEvent(event);
-            }
-        } else {
-            if (scrollX >= 0 && lastX - touchX >= 0 && viewPager.canScrollHorizontally(1) && scrollDist == 0) {
-                lastX = touchX;
-                return viewPager.onTouchEvent(event);
-            } else if (viewPager.canScrollHorizontally(-1)) {
-                lastX = touchX;
-                return viewPager.onTouchEvent(event);
-            }
-        }
+        int scrollX =  Math.round(value >= 2f || value <= -2f ? value / 2 : value);
+//        if (isLoadMore) {
+//            if (scrollX <= 0 && (int)lastX - touchX <= 0 && viewPager.canScrollHorizontally(-1) && scrollDist == 0) {
+//                lastX = touchX;
+//                Log.d("hhhh","++++++++++++++++");
+//                return viewPager.onTouchEvent(event);
+//            } else if (viewPager.canScrollHorizontally(1)) {
+//                lastX = touchX;
+//                return viewPager.onTouchEvent(event);
+//            }
+//        } else {
+//            if (scrollX >= 0 && (int)lastX - touchX >= 0 && viewPager.canScrollHorizontally(1) && scrollDist == 0) {
+//                lastX = touchX;
+//                return viewPager.onTouchEvent(event);
+//            } else if (viewPager.canScrollHorizontally(-1)) {
+//                lastX = touchX;
+//                return viewPager.onTouchEvent(event);
+//            }
+//        }
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_MOVE:
-                int tempScrollX;
-                if (loadMode != PULL && loadMode != NEED_RELEASE) {
-                    tempScrollX = scrollX + downScrollX;
-                } else {
-                    tempScrollX = scrollX;
-                }
-                Log.d("hhhh", "touchX=" + touchX + "; lastX=" + lastX + "; scrollDist=" + scrollDist + "; tempScrollX=" + tempScrollX);
-                if ((tempScrollX < 0 && scrollDist > 0) || (tempScrollX > 0 && scrollDist < 0)) {
-                    tempScrollX = 0;
-                    event.setAction(MotionEvent.ACTION_DOWN);
-                    viewPager.onTouchEvent(event);
-                }
-                scrollTo(tempScrollX, 0);
-                if (loadMode == PULL || loadMode == NEED_RELEASE) {
-                    float dist = 1.0f * Math.abs(scrollDist) / viewWidth;
-                    if (dist >= 1) {
-                        if (loadMode != NEED_RELEASE) {
-                            listener.needRelease();
-                            loadMode = NEED_RELEASE;
-                        }
+                if (event.getPointerId(event.getActionIndex())==0){
+                    int tempScrollX;
+                    if (loadMode != PULL && loadMode != NEED_RELEASE) {
+                        tempScrollX = scrollX + downScrollX;
                     } else {
-                        listener.pull(dist);
-                        loadMode = PULL;
+                        tempScrollX = scrollX;
                     }
+                    Log.d("hhhh", "touchX=" + touchX + "; lastX=" + lastX +"; scrollX="+scrollX+"; scrollDist=" + scrollDist + "; tempScrollX=" + tempScrollX+"; downScrollX="+downScrollX);
+                    if ((tempScrollX <= 0 && scrollDist > 0) || (tempScrollX >= 0 && scrollDist < 0)) {
+                        Log.d("hhhh","------------------");
+                        tempScrollX = 0;
+//                        scrollTo(0, 0);
+//                        event.setAction(MotionEvent.ACTION_DOWN);
+//                        viewPager.onTouchEvent(event);
+//                        event.setLocation(touchX+scaledPagingTouchSlop,event.getY());
+//                        event.setAction(MotionEvent.ACTION_MOVE);
+//                        return viewPager.onTouchEvent(event);
+                    }
+                    scrollTo(tempScrollX, 0);
+                    if (loadMode == PULL || loadMode == NEED_RELEASE) {
+                        float dist = 1.0f * Math.abs(scrollDist) / viewWidth;
+                        if (dist >= 1) {
+                            if (loadMode != NEED_RELEASE) {
+                                listener.needRelease();
+                                loadMode = NEED_RELEASE;
+                            }
+                        } else {
+                            listener.pull(dist);
+                            loadMode = PULL;
+                        }
+                    }
+                    lastX = touchX;
                 }
-                lastX = touchX;
+
                 break;
             case MotionEvent.ACTION_UP:
-                switch (loadMode) {
-                    case PULL:
-                        viewPager.onTouchEvent(event);
-                        scroller.startScroll(scrollDist, 0, -scrollDist, 0);
-                        break;
-                    case NEED_RELEASE:
-                        loadMode = LOADING;
-                        scroller.startScroll(scrollDist, 0, isLoadMore ? viewWidth - scrollDist : scrollDist + viewWidth, 0);
-                        listener.loading();
-                        if (isLoadMore)
-                            loadListener.loadMore();
-                        else
-                            loadListener.refresh();
-                        break;
-                    case LOADING:
-                        if (isLoadMore && (scrollDist - viewWidth) > 0) {
-                            scroller.startScroll(scrollDist, 0, viewWidth - scrollDist, 0);
-                        } else if (isRefresh && (scrollDist + viewWidth) < 0) {
-                            scroller.startScroll(scrollDist, 0, Math.abs(scrollDist) - viewWidth, 0);
-                        }
-                        break;
-                    case END_FOR_LOAD_MORE:
-                    case END_FOR_REFRESH:
-                        scroller.startScroll(scrollDist, 0, -scrollDist, 0);
-                        break;
+            case MotionEvent.ACTION_POINTER_UP:
+                if (event.getPointerId(event.getActionIndex())==0){
+                    switch (loadMode) {
+                        case PULL:
+                            viewPager.onTouchEvent(event);
+                            scroller.startScroll(scrollDist, 0, -scrollDist, 0);
+                            break;
+                        case NEED_RELEASE:
+                            loadMode = LOADING;
+                            scroller.startScroll(scrollDist, 0, isLoadMore ? viewWidth - scrollDist : scrollDist + viewWidth, 0);
+                            listener.loading();
+                            if (isLoadMore)
+                                loadListener.loadMore();
+                            else
+                                loadListener.refresh();
+                            break;
+                        case LOADING:
+                            if (isLoadMore && (scrollDist - viewWidth) > 0) {
+                                scroller.startScroll(scrollDist, 0, viewWidth - scrollDist, 0);
+                            } else if (isRefresh && (scrollDist + viewWidth) < 0) {
+                                scroller.startScroll(scrollDist, 0, Math.abs(scrollDist) - viewWidth, 0);
+                            }
+                            break;
+                        case END_FOR_LOAD_MORE:
+                        case END_FOR_REFRESH:
+                            scroller.startScroll(scrollDist, 0, -scrollDist, 0);
+                            break;
+                    }
+                    invalidate();
                 }
-                invalidate();
                 break;
         }
         return super.onTouchEvent(event);
