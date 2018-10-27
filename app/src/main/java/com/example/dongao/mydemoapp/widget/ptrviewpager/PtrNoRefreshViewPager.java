@@ -48,6 +48,7 @@ public class PtrNoRefreshViewPager extends ViewGroup {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        removeAllViews();
         scroller = new Scroller(context);
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         screenWidth = displayMetrics.widthPixels;
@@ -152,7 +153,7 @@ public class PtrNoRefreshViewPager extends ViewGroup {
                 if (event.getPointerId(event.getActionIndex()) == 0) {
                     if (touchX > lastX && scrollDist > 0) {
                         needStopEvent = true;
-                        scroller.startScroll(getScrollX(), 0, -getScrollX(), 0);
+                        scroller.startScroll(scrollDist, 0, -scrollDist, 0);
                         invalidate();
                         return false;
                     }
@@ -210,6 +211,8 @@ public class PtrNoRefreshViewPager extends ViewGroup {
     @Override
     public void computeScroll() {
         if (scroller.computeScrollOffset()) {
+            if (loadMode == PULL && loadMoreListener != null)
+                loadMoreListener.pull(1.0f * scroller.getCurrX() / loadMoreView.getMeasuredWidth());
             scrollTo(scroller.getCurrX(), scroller.getCurrY());
             invalidate();
             if (scroller.getCurrX() == 0) {
