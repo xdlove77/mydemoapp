@@ -11,12 +11,14 @@ import android.widget.TextView;
 
 import com.example.dongao.mydemoapp.widget.ptrviewpager.LoadMoreView;
 import com.example.dongao.mydemoapp.widget.ptrviewpager.PtrLoadListener;
+import com.example.dongao.mydemoapp.widget.ptrviewpager.PtrNoRefreshViewPager;
 import com.example.dongao.mydemoapp.widget.ptrviewpager.PtrViewPager;
+import com.example.dongao.mydemoapp.widget.ptrviewpager.PtrViewPager2;
 
 import java.util.ArrayList;
 
 public class LoadMoreViewPagerActivity extends AppCompatActivity {
-    private PtrViewPager viewPager;
+    private PtrNoRefreshViewPager viewPager;
     ArrayList<View> views;
     private int[] colors = {0xffffffff,0xffcccccc,0xffff0000,0xff00ff00,0xffffff00};
     private TestAdapter adapter;
@@ -26,21 +28,30 @@ public class LoadMoreViewPagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_more_view_pager);
         handler = new Handler();
-        viewPager=(PtrViewPager)findViewById(R.id.viewPager);
+        viewPager=(PtrNoRefreshViewPager)findViewById(R.id.viewPager);
         viewPager.setLoadMoreView(new LoadMoreView(this));
         views = new ArrayList<>();
         adapter = new TestAdapter();
         loadData();
         viewPager.getViewPager().setAdapter(adapter);
         viewPager.setLoadListener(new PtrLoadListener() {
+
+            private boolean isError = true;
+
             @Override
             public void loadMore() {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        if (views.size()>=5 && isError) {
+                            isError = false;
+                            viewPager.loadError();
+                            return;
+                        }
                         loadData();
 //                        viewPager.loadMoreEnd();
-                        viewPager.loadOrRefreshFinish();
+                        viewPager.loadFinish();
+//                        viewPager.loadOrRefreshFinish();
                     }
                 },5000);
             }

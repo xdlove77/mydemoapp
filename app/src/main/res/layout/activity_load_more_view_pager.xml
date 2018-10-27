@@ -8,7 +8,7 @@
     tools:context=".LoadMoreViewPagerActivity"
     >
 
-    <com.example.dongao.mydemoapp.widget.ptrviewpager.PtrViewPager
+    <com.example.dongao.mydemoapp.widget.ptrviewpager.PtrNoRefreshViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="300dp"
