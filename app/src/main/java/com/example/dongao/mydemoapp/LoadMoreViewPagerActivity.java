@@ -2,6 +2,7 @@ package com.example.dongao.mydemoapp;
 
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -33,8 +34,34 @@ public class LoadMoreViewPagerActivity extends AppCompatActivity {
         views = new ArrayList<>();
         adapter = new TestAdapter();
         loadData();
-        viewPager.getViewPager().setAdapter(adapter);
-        viewPager.setLoadListener(new PtrLoadListener() {
+        ViewPager vp = viewPager.getViewPager();
+        vp.setAdapter(adapter);
+        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+//                if (position == views.size()-5+3){
+//                    viewPager.setLoading(true);
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            loadData();
+//                            viewPager.loadFinish();
+//                        }
+//                    },1000);
+//                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        this.viewPager.setLoadListener(new PtrLoadListener() {
 
             private boolean isError = true;
 
@@ -43,14 +70,18 @@ public class LoadMoreViewPagerActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (views.size()>=5 && isError) {
-                            isError = false;
-                            viewPager.loadError();
-                            return;
-                        }
+//                        if (views.size()>=5 && isError) {
+//                            isError = false;
+//                            viewPager.loadError();
+//                            return;
+//                        }
+//                        if (views.size() >= 15 ){
+//                            viewPager.loadEnd();
+//                            return;
+//                        }
                         loadData();
 //                        viewPager.loadMoreEnd();
-                        viewPager.loadFinish();
+                        LoadMoreViewPagerActivity.this.viewPager.loadFinish();
 //                        viewPager.loadOrRefreshFinish();
                     }
                 },5000);

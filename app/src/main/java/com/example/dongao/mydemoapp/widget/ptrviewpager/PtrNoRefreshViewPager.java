@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.Scroller;
+
 /**
  * 去掉pull状态时回拉的touch事件可以传递给viewpager 并删除头部view（原因：短时间内顾及不到头部的功能 所以阉割掉）
  */
@@ -106,24 +107,26 @@ public class PtrNoRefreshViewPager extends ViewGroup {
                     downScrollX = getScrollX();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (isLoadMore)
-                        return isLoadMore;
-                    float scrollX = touchX - lastX;
-                    if (!viewPager.canScrollHorizontally(1) && scrollX < 0) {
-                        isLoadMore = true;
-                        if (loadMode == LOADING) {
-                            loadMoreListener.loading();
-                            needStopEvent = false;
-                        } else if (loadMode != END_FOR_LOAD_MORE)
-                            loadMode = PULL;
-                        else {
-                            loadMoreListener.end();
-                            needStopEvent = false;
+                    if (ev.getPointerId(ev.getActionIndex()) == 0) {
+                        if (isLoadMore)
+                            return isLoadMore;
+                        float scrollX = touchX - lastX;
+                        if (!viewPager.canScrollHorizontally(1) && scrollX < 0) {
+                            isLoadMore = true;
+                            if (loadMode == LOADING) {
+                                loadMoreListener.loading();
+                                needStopEvent = false;
+                            } else if (loadMode != END_FOR_LOAD_MORE)
+                                loadMode = PULL;
+                            else {
+                                loadMoreListener.end();
+                                needStopEvent = false;
+                            }
+                            return true;
                         }
-                        return true;
+                        isLoadMore = false;
+                        lastX = touchX;
                     }
-                    isLoadMore = false;
-                    lastX = touchX;
             }
         }
         return super.onInterceptTouchEvent(ev);
@@ -135,7 +138,7 @@ public class PtrNoRefreshViewPager extends ViewGroup {
         if (needStopEvent) {
             return false;
         }
-        if (loadMoreListener == null || !isLoadMore){
+        if (loadMoreListener == null || !isLoadMore) {
             return false;
         }
         int viewWidth = loadMoreView.getMeasuredWidth();
@@ -177,30 +180,28 @@ public class PtrNoRefreshViewPager extends ViewGroup {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                if (event.getPointerId(event.getActionIndex()) == 0) {
-                    switch (loadMode) {
-                        case PULL:
+                switch (loadMode) {
+                    case PULL:
+                        scroller.startScroll(scrollDist, 0, -scrollDist, 0);
+                        break;
+                    case NEED_RELEASE:
+                        loadMode = LOADING;
+                        scroller.startScroll(scrollDist, 0, viewWidth - scrollDist, 0);
+                        loadMoreListener.loading();
+                        loadListener.loadMore();
+                        break;
+                    case LOADING:
+                        if (scrollDist - viewWidth > 0) {
+                            scroller.startScroll(scrollDist, 0, viewWidth - scrollDist, 0);
+                        } else {
                             scroller.startScroll(scrollDist, 0, -scrollDist, 0);
-                            break;
-                        case NEED_RELEASE:
-                            loadMode = LOADING;
-                            scroller.startScroll(scrollDist, 0, viewWidth - scrollDist , 0);
-                            loadMoreListener.loading();
-                            loadListener.loadMore();
-                            break;
-                        case LOADING:
-                                if (scrollDist - viewWidth > 0) {
-                                    scroller.startScroll(scrollDist, 0, viewWidth - scrollDist, 0);
-                                } else {
-                                    scroller.startScroll(scrollDist, 0, -scrollDist, 0);
-                                }
-                            break;
-                        case END_FOR_LOAD_MORE:
-                            scroller.startScroll(scrollDist, 0, -scrollDist, 0);
-                            break;
-                    }
-                    invalidate();
+                        }
+                        break;
+                    case END_FOR_LOAD_MORE:
+                        scroller.startScroll(scrollDist, 0, -scrollDist, 0);
+                        break;
                 }
+                invalidate();
                 break;
         }
         return super.onTouchEvent(event);
@@ -212,16 +213,6 @@ public class PtrNoRefreshViewPager extends ViewGroup {
             scrollTo(scroller.getCurrX(), scroller.getCurrY());
             invalidate();
             if (scroller.getCurrX() == 0) {
-                switch (loadMode) {
-                    case END_FOR_LOAD_MORE:
-                    case ERROR:
-                    case FINISH:
-                        break;
-                    case LOADING:
-                        break;
-                    case PULL:
-                        break;
-                }
                 isLoadMore = false;
                 needStopEvent = false;
             }
@@ -240,8 +231,15 @@ public class PtrNoRefreshViewPager extends ViewGroup {
         finish(ERROR);
     }
 
+    public void setLoading(boolean isLoading) {
+        if (isLoading)
+            loadMode = LOADING;
+        else
+            loadMode = PULL;
+    }
+
     private void finish(int mode) {
-        isLoadMore =false;
+        isLoadMore = false;
         needStopEvent = true;
         loadMode = mode;
         if (loadMoreListener != null) {
