@@ -260,15 +260,18 @@ public class PtrNoRefreshViewPager extends ViewGroup {
         } else {
             return;
         }
-
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int scrollX = getScrollX();
-                scroller.startScroll(scrollX, 0, -scrollX, 0);
-                invalidate();
-            }
-        }, 300);
+        if (getScrollX() == 0 ){
+            needStopEvent=false;
+        }else{
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    int scrollX = getScrollX();
+                    scroller.startScroll(scrollX, 0, -scrollX, 0);
+                    invalidate();
+                }
+            }, 300);
+        }
     }
 
     public void setLoadMoreView(View view) {
