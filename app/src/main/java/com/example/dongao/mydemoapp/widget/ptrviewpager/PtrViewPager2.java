@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Scroller;
 
 /**
- *  pull等状态时回拉时事件可以传递给viewpager 不过有卡顿问题 （原因：传递给viewpager时回卡顿一下，估计是viewpager
+ * 去掉pull状态时回拉的touch事件可以传递给viewpager （原因：传递给viewpager时回卡顿一下，估计是viewpager
  *  的touchSlop问题 不是很确定）
  */
-public class PtrViewPager extends ViewGroup {
+public class PtrViewPager2 extends ViewGroup {
     private static final int PULL = 1;
     private static final int NEED_RELEASE = PULL << 1;
     private static final int LOADING = PULL << 2;
@@ -47,27 +47,24 @@ public class PtrViewPager extends ViewGroup {
     private float lastX;
     private float interceptX;
     private boolean needStopEvent;
-    private int scaledPagingTouchSlop;
 
-    public PtrViewPager(Context context) {
+    public PtrViewPager2(Context context) {
         this(context, null);
     }
 
-    public PtrViewPager(Context context, AttributeSet attrs) {
+    public PtrViewPager2(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
         scroller = new Scroller(context);
-        ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
-        touchSlop = viewConfiguration.getScaledTouchSlop();
-        scaledPagingTouchSlop = viewConfiguration.getScaledPagingTouchSlop();
+        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
         viewPager = new ViewPager(context, attrs);
-        viewPager.setLayoutParams(new ViewGroup.LayoutParams(
+        viewPager.setLayoutParams(new LayoutParams(
                 LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT
         ));
@@ -121,23 +118,22 @@ public class PtrViewPager extends ViewGroup {
             float touchX = ev.getX();
             switch (ev.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    if (ev.getPointerId(ev.getActionIndex())==0){
-                        lastX = downX = touchX;
-                        downScrollX = getScrollX();
-                    }
+                    lastX = downX = touchX;
+                    downScrollX = getScrollX();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if (isRefresh || isLoadMore)
                         return true;
-
                     float scrollX = touchX - lastX;
                     if (loadMoreEnable && !viewPager.canScrollHorizontally(1) && scrollX < 0) {
                         isLoadMore = true;
                         isRefresh = false;
-                        if (loadMode != END_FOR_LOAD_MORE)
+                        if (loadMode == LOADING) {
+                            loadMoreListener.loading();
+                            needStopEvent = false;
+                        } else if (loadMode != END_FOR_LOAD_MORE)
                             loadMode = PULL;
-                        else{
+                        else {
                             loadMoreListener.end();
                             needStopEvent = false;
                         }
@@ -148,7 +144,7 @@ public class PtrViewPager extends ViewGroup {
                         isLoadMore = false;
                         if (loadMode != END_FOR_REFRESH)
                             loadMode = PULL;
-                        else{
+                        else {
                             refreshListener.end();
                             needStopEvent = false;
                         }
@@ -169,7 +165,7 @@ public class PtrViewPager extends ViewGroup {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (needStopEvent) {
-            return true;
+            return false;
         }
         PtrRefreshAndLoadMoreViewListener listener;
         int viewWidth;
@@ -184,46 +180,25 @@ public class PtrViewPager extends ViewGroup {
         float touchX = event.getX();
         int scrollDist = getScrollX();
         float value = downX - touchX;
-        int scrollX =  Math.round(value >= 2f || value <= -2f ? value / 2 : value);
-//        if (isLoadMore) {
-//            if (scrollX <= 0 && (int)lastX - touchX <= 0 && viewPager.canScrollHorizontally(-1) && scrollDist == 0) {
-//                lastX = touchX;
-//                Log.d("hhhh","++++++++++++++++");
-//                return viewPager.onTouchEvent(event);
-//            } else if (viewPager.canScrollHorizontally(1)) {
-//                lastX = touchX;
-//                return viewPager.onTouchEvent(event);
-//            }
-//        } else {
-//            if (scrollX >= 0 && (int)lastX - touchX >= 0 && viewPager.canScrollHorizontally(1) && scrollDist == 0) {
-//                lastX = touchX;
-//                return viewPager.onTouchEvent(event);
-//            } else if (viewPager.canScrollHorizontally(-1)) {
-//                lastX = touchX;
-//                return viewPager.onTouchEvent(event);
-//            }
-//        }
+        int scrollX = (int) (value >= 2f || value <= -2f ? value / 2 : value);
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_MOVE:
-                if (event.getPointerId(event.getActionIndex())==0){
+                if (event.getPointerId(event.getActionIndex()) == 0) {
+                    if (touchX > lastX && scrollDist > 0) {
+                        needStopEvent = true;
+                        scroller.startScroll(getScrollX(), 0, -getScrollX(), 0);
+                        invalidate();
+                        return false;
+                    } else if (touchX < lastX && scrollDist < 0) {
+
+                    }
                     int tempScrollX;
-                    if (loadMode != PULL && loadMode != NEED_RELEASE) {
-                        tempScrollX = scrollX + downScrollX;
-                    } else {
-                        tempScrollX = scrollX;
-                    }
-                    Log.d("hhhh", "touchX=" + touchX + "; lastX=" + lastX +"; scrollX="+scrollX+"; scrollDist=" + scrollDist + "; tempScrollX=" + tempScrollX+"; downScrollX="+downScrollX);
-                    if ((tempScrollX <= 0 && scrollDist > 0) || (tempScrollX >= 0 && scrollDist < 0)) {
-                        Log.d("hhhh","------------------");
-                        tempScrollX = 0;
-//                        scrollTo(0, 0);
-//                        event.setAction(MotionEvent.ACTION_DOWN);
-//                        viewPager.onTouchEvent(event);
-//                        event.setLocation(touchX+scaledPagingTouchSlop,event.getY());
-//                        event.setAction(MotionEvent.ACTION_MOVE);
-//                        return viewPager.onTouchEvent(event);
-                    }
+//                    if (loadMode != PULL && loadMode != NEED_RELEASE) {
+//                        tempScrollX = scrollX + downScrollX;
+//                    } else {
+                    tempScrollX = scrollX;
+//                    }
                     scrollTo(tempScrollX, 0);
                     if (loadMode == PULL || loadMode == NEED_RELEASE) {
                         float dist = 1.0f * Math.abs(scrollDist) / viewWidth;
@@ -239,14 +214,11 @@ public class PtrViewPager extends ViewGroup {
                     }
                     lastX = touchX;
                 }
-
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-                if (event.getPointerId(event.getActionIndex())==0){
+                if (event.getPointerId(event.getActionIndex()) == 0) {
                     switch (loadMode) {
                         case PULL:
-                            viewPager.onTouchEvent(event);
                             scroller.startScroll(scrollDist, 0, -scrollDist, 0);
                             break;
                         case NEED_RELEASE:
@@ -259,10 +231,18 @@ public class PtrViewPager extends ViewGroup {
                                 loadListener.refresh();
                             break;
                         case LOADING:
-                            if (isLoadMore && (scrollDist - viewWidth) > 0) {
-                                scroller.startScroll(scrollDist, 0, viewWidth - scrollDist, 0);
-                            } else if (isRefresh && (scrollDist + viewWidth) < 0) {
-                                scroller.startScroll(scrollDist, 0, Math.abs(scrollDist) - viewWidth, 0);
+                            if (isLoadMore) {
+                                if (scrollDist - viewWidth > 0) {
+                                    scroller.startScroll(scrollDist, 0, viewWidth - scrollDist, 0);
+                                } else {
+                                    scroller.startScroll(scrollDist, 0, -scrollDist, 0);
+                                }
+                            } else {
+                                if (viewWidth + scrollDist < 0) {
+                                    scroller.startScroll(scrollDist, 0, Math.abs(scrollDist) - viewWidth, 0);
+                                } else {
+                                    scroller.startScroll(scrollDist, 0, -scrollDist, 0);
+                                }
                             }
                             break;
                         case END_FOR_LOAD_MORE:
@@ -288,15 +268,15 @@ public class PtrViewPager extends ViewGroup {
                     case END_FOR_REFRESH:
                     case ERROR:
                     case FINISH:
-                        needStopEvent = false;
                         break;
                     case LOADING:
                         break;
                     case PULL:
-                        isLoadMore = false;
-                        isRefresh = false;
                         break;
                 }
+                isLoadMore = false;
+                isRefresh = false;
+                needStopEvent = false;
             }
         }
     }
@@ -309,7 +289,7 @@ public class PtrViewPager extends ViewGroup {
         finish(END_FOR_REFRESH);
     }
 
-    public void loadMoreEnd(){
+    public void loadMoreEnd() {
         finish(END_FOR_LOAD_MORE);
     }
 
@@ -326,7 +306,7 @@ public class PtrViewPager extends ViewGroup {
         } else if (isRefresh) {
             listener = refreshListener;
         }
-        if (listener !=null){
+        if (listener != null) {
             switch (mode) {
                 case FINISH:
                     listener.finish();
@@ -341,7 +321,7 @@ public class PtrViewPager extends ViewGroup {
             }
             isLoadMore = false;
             isRefresh = false;
-        }else {
+        } else {
             return;
         }
 

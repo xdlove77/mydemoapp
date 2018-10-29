@@ -2,6 +2,7 @@ package com.example.dongao.mydemoapp;
 
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,12 +12,14 @@ import android.widget.TextView;
 
 import com.example.dongao.mydemoapp.widget.ptrviewpager.LoadMoreView;
 import com.example.dongao.mydemoapp.widget.ptrviewpager.PtrLoadListener;
+import com.example.dongao.mydemoapp.widget.ptrviewpager.PtrNoRefreshViewPager;
 import com.example.dongao.mydemoapp.widget.ptrviewpager.PtrViewPager;
+import com.example.dongao.mydemoapp.widget.ptrviewpager.PtrViewPager2;
 
 import java.util.ArrayList;
 
 public class LoadMoreViewPagerActivity extends AppCompatActivity {
-    private PtrViewPager viewPager;
+    private PtrNoRefreshViewPager viewPager;
     ArrayList<View> views;
     private int[] colors = {0xffffffff,0xffcccccc,0xffff0000,0xff00ff00,0xffffff00};
     private TestAdapter adapter;
@@ -26,21 +29,60 @@ public class LoadMoreViewPagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_more_view_pager);
         handler = new Handler();
-        viewPager=(PtrViewPager)findViewById(R.id.viewPager);
+        viewPager=(PtrNoRefreshViewPager)findViewById(R.id.viewPager);
         viewPager.setLoadMoreView(new LoadMoreView(this));
         views = new ArrayList<>();
         adapter = new TestAdapter();
         loadData();
-        viewPager.getViewPager().setAdapter(adapter);
-        viewPager.setLoadListener(new PtrLoadListener() {
+        ViewPager vp = viewPager.getViewPager();
+        vp.setAdapter(adapter);
+        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+//                if (position == views.size()-5+3){
+//                    viewPager.setLoading(true);
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            loadData();
+//                            viewPager.loadFinish();
+//                        }
+//                    },1000);
+//                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        this.viewPager.setLoadListener(new PtrLoadListener() {
+
+            private boolean isError = true;
+
             @Override
             public void loadMore() {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+//                        if (views.size()>=5 && isError) {
+//                            isError = false;
+//                            viewPager.loadError();
+//                            return;
+//                        }
+//                        if (views.size() >= 15 ){
+//                            viewPager.loadEnd();
+//                            return;
+//                        }
                         loadData();
 //                        viewPager.loadMoreEnd();
-                        viewPager.loadOrRefreshFinish();
+                        LoadMoreViewPagerActivity.this.viewPager.loadFinish();
+//                        viewPager.loadOrRefreshFinish();
                     }
                 },5000);
             }

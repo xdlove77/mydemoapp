@@ -46,12 +46,13 @@ public class LoadMoreView extends FrameLayout implements PtrRefreshAndLoadMoreVi
 
     @Override
     public void end() {
-        loadImg.setRotation(3600);
+        loadImg.setRotation(360);
         loadTv.setText("没\n有\n更\n多");
     }
 
     @Override
     public void error() {
-
+        loadImg.setRotation(180);
+        loadTv.setText("加\n载\n出\n错");
     }
 }
