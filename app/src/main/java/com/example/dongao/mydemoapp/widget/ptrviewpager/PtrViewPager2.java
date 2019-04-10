@@ -15,6 +15,7 @@ import android.widget.Scroller;
  * 去掉pull状态时回拉的touch事件可以传递给viewpager （原因：传递给viewpager时回卡顿一下，估计是viewpager
  *  的touchSlop问题 不是很确定）
  */
+@Deprecated
 public class PtrViewPager2 extends ViewGroup {
     private static final int PULL = 1;
     private static final int NEED_RELEASE = PULL << 1;

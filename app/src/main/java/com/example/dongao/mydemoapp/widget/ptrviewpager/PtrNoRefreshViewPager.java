@@ -13,6 +13,7 @@ import android.widget.Scroller;
 /**
  * 去掉pull状态时回拉的touch事件可以传递给viewpager 并删除头部view（原因：短时间内顾及不到头部的功能 所以阉割掉）
  */
+@Deprecated
 public class PtrNoRefreshViewPager extends ViewGroup {
     private static final int PULL = 1;
     private static final int NEED_RELEASE = PULL << 1;
@@ -37,6 +38,7 @@ public class PtrNoRefreshViewPager extends ViewGroup {
     private float lastX;
     private boolean needStopEvent;
     private int downScrollX;
+    private int touchSlop;
 
     public PtrNoRefreshViewPager(Context context) {
         this(context, null);
@@ -59,6 +61,7 @@ public class PtrNoRefreshViewPager extends ViewGroup {
                 LayoutParams.MATCH_PARENT
         ));
         addView(viewPager);
+        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
     }
 
     @Override
@@ -112,7 +115,7 @@ public class PtrNoRefreshViewPager extends ViewGroup {
                         if (isLoadMore)
                             return isLoadMore;
                         float scrollX = touchX - lastX;
-                        if (!viewPager.canScrollHorizontally(1) && scrollX < 0) {
+                        if (!viewPager.canScrollHorizontally(1) && scrollX < 0 && Math.abs(scrollX) > touchSlop) {
                             isLoadMore = true;
                             if (loadMode == LOADING) {
                                 loadMoreListener.loading();
@@ -123,10 +126,10 @@ public class PtrNoRefreshViewPager extends ViewGroup {
                                 loadMoreListener.end();
                                 needStopEvent = false;
                             }
+                            lastX = downX = touchX;
                             return true;
                         }
                         isLoadMore = false;
-                        lastX = touchX;
                     }
             }
         }
