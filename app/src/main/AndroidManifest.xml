@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.dongao.mydemoapp"
-    >
+    package="com.example.dongao.mydemoapp">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -44,16 +43,20 @@
         <activity android:name=".ViewAnimationUtilsActivity" />
         <activity android:name=".ExpandableDemoActivity" />
         <activity android:name=".MySelfBingImageDemoActivity" />
-        <activity android:name=".KuaiJiYunQuLineDemoActivity"></activity>
-        <activity android:name=".StatusBarActivity"></activity>
+        <activity android:name=".KuaiJiYunQuLineDemoActivity" />
+        <activity android:name=".StatusBarActivity" />
         <activity android:name=".colorbar.CustomColorBarActivity" />
         <activity android:name=".colorbar.TranslucentBarActivity" />
         <activity android:name=".colorbar.TransparentBarActivity" />
         <activity android:name=".colorbar.HideBarActivity" />
-        <activity android:name=".RecyclerViewItemCanSeeActivity"></activity>
-        <activity android:name=".ReflectionImageViewActivity"></activity>
-        <activity android:name=".Rotate3DActivity"></activity>
-        <activity android:name=".ScrollTabsDemoActivity">
+        <activity android:name=".RecyclerViewItemCanSeeActivity" />
+        <!-- <activity android:name=".ReflectionImageViewActivity" /> -->
+        <activity android:name=".Rotate3DActivity" />
+        <activity android:name=".ScrollTabsDemoActivity"></activity>
+        <activity android:name=".LoadMoreViewPagerActivity">
+
+        </activity>
+        <activity android:name=".PtrViewPagerLayoutActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

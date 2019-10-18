@@ -93,4 +93,29 @@
         <attr name="scrollDuration" format="integer"/>
         <attr name="scrollInterpolator" format="reference"/>
     </declare-styleable>
+
+
+    <declare-styleable name="RCConfig">
+        <attr name="ltRadius" format="dimension"/>
+        <attr name="rtRadius" format="dimension"/>
+        <attr name="lbRadius" format="dimension"/>
+        <attr name="rbRadius" format="dimension"/>
+        <attr name="layoutRadius" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="LockPatternView" >
+        <attr name="inStealthMode" format="boolean"/>
+        <attr name="lineWidth" format="dimension"/>
+        <attr name="cellSize" format="integer"/>
+        <attr name="cellPadding" format="dimension"/>
+        <attr name="normalColor" format="color"/>
+        <attr name="cellColor" format="color"/>
+        <attr name="errorColor" format="color"/>
+        <attr name="normalDrawable" format="reference"/>
+        <attr name="selectedDrawable" format="reference"/>
+        <attr name="errorDrawable" format="reference"/>
+        <attr name="lineBelowCell" format="boolean"/>
+        <attr name="repeat" format="boolean"/>
+        <attr name="clearErrorDelayedTime" format="float"/>
+    </declare-styleable>
 </resources>

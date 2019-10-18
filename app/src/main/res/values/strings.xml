@@ -10,4 +10,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_zip_demo">ZipDemoActivity</string>
+
+    <string name="pattern_cell_added_verbose">添加了%1d</string>
+    <string name="pattern_area">点击了绘制区域</string>
+    <string name="pattern_start">绘制开始</string>
+    <string name="pattern_detected">绘制完成</string>
+    <string name="pattern_cleared">绘制被清空</string>
 </resources>
